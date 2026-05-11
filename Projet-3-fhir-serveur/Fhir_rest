@@ -1,4 +1,4 @@
-# Projet 3: Serveur FHIR R4 - Clinique Sainte-Marie
+# Projet 3 — Serveur FHIR R4 — Clinique Sainte-Marie
 
 ## Objectif
 
@@ -222,4 +222,3 @@ Au cours de ce projet, plusieurs comportements notables de Hapi FHIR 8.8.0 ont �
 - [x] Search parameters avancés démontrés (component search, $everything, Bundle transaction)
 - [x] Comportements Hapi 8.8.0 documentés (EncounterStatus STU3, indexation, terminologies ANS)
 - [ ] Vidéo démo (à venir)
-
