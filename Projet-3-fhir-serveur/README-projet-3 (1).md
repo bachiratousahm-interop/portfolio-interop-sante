@@ -1,8 +1,8 @@
-# Projet 3 — Serveur FHIR R4 — Clinique Sainte-Marie
+# Projet 3: Serveur FHIR R4 - Clinique Sainte-Marie
 
 ## Objectif
 
-Déploiement d'un serveur FHIR R4 personnel, peuplement avec des données synthétiques représentatives de la Clinique Sainte-Marie, et démonstration des opérations FHIR via une collection Postman documentée.
+Déploiement d'un serveur FHIR R4 personnel, peuplement avec des données synthétiques de la Clinique Sainte-Marie, et démonstration des opérations FHIR via une collection Postman documentée.
 
 ---
 
