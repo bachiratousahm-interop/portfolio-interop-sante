@@ -31,7 +31,6 @@ Hapi FHIR 8.8.0
     │  tourne sur
     ▼
 Railway.app
-(datacenter Frankfurt / Europe West 4)
     │
     │  stocke dans
     ▼
@@ -84,18 +83,10 @@ L'écosystème suivant a été créé sur le serveur, représentant un cas clini
 
 ## Collection Postman
 
-### Import rapide
-
-1. Ouvrez Postman
-2. Cliquez sur **Import**
-3. Importez `postman/Clinique-Sainte-Marie-FHIR-R4.postman_collection.json`
-4. Importez `postman/Sainte-Marie-FHIR.postman_environment.json`
-5. Sélectionnez l'environnement **Sainte-Marie FHIR** en haut à droite
-
 ### Structure de la collection
 
 ```
-Clinique Sainte-Marie — FHIR R4
+Clinique Sainte-Marie - FHIR R4
 ├── CapabilityStatement
 │   └── GET — metadata
 ├── Organization
@@ -108,7 +99,7 @@ Clinique Sainte-Marie — FHIR R4
 │   ├── GET — Rechercher par nom
 │   └── GET — Dossier complet ($everything)
 ├── Encounter
-│   └── PUT — Consultation cardio 12/03/2026
+│   └── PUT — Consultation cardio 
 ├── Observation
 │   ├── PUT — Tension artérielle
 │   ├── PUT — NFS
@@ -166,16 +157,16 @@ POST /fhir  (Bundle type=transaction)
 Le Patient Jean DUPONT est conforme au profil `SteMariePatientINS` défini dans le Projet 2 :
 
 - **URL canonique** : `https://clinique-sainte-marie.fr/fhir/StructureDefinition/SteMariePatientINS`
-- **Publié sur** : [Simplifier.net](https://simplifier.net) — projet `portfolio-sainte-marie`
+- **Publié sur** : [Simplifier.net](https://simplifier.net) , projet`portfolio-sainte-marie`
 - **Hiérarchie** : Patient R4 → FrPatient → FrPatientINS → SteMariePatientINS
 
 ### Note sur la validation
 
 La validation complète via `$validate` du profil `SteMariePatientINS` nécessite le chargement de l'écosystème FR Core complet et des terminologies ANS (NOS). Cette configuration dépasse les ressources disponibles sur l'environnement de démonstration Railway.
 
-La validation a été réalisée via [validator.fhir.org](https://validator.fhir.org) — voir captures dans `/captures`.
+La validation a été réalisée via [validator.fhir.org](https://validator.fhir.org), voir captures dans `/captures`.
 
----
+
 
 ## Notes techniques
 
@@ -183,11 +174,10 @@ La validation a été réalisée via [validator.fhir.org](https://validator.fhir
 
 Au cours de ce projet, plusieurs comportements notables de Hapi FHIR 8.8.0 ont été identifiés et documentés :
 
-**EncounterStatus** — Hapi 8.8.0 utilise les codes STU3 (`finished`, `arrived`, `triaged`...) plutôt que les codes R4 (`completed`...). Ce comportement est hérité de la version STU3 de FHIR et n'a pas été mis à jour pour maintenir la compatibilité ascendante. Le profil FR Core utilise également `finished`, ce qui confirme la convergence entre l'implémentation Hapi et le profil national français.
+**EncounterStatus**: Hapi 8.8.0 utilise les codes STU3 (`finished`, `arrived`, `triaged`...) plutôt que les codes R4 (`completed`...). Ce comportement est hérité de la version STU3 de FHIR et n'a pas été mis à jour pour maintenir la compatibilité ascendante. Le profil FR Core utilise également `finished`, ce qui confirme la convergence entre l'implémentation Hapi et le profil national français.
 
-**Indexation des StructureDefinitions** — Un bug d'indexation de Hapi 8.8.0 empêche la recherche par URL canonique (`?url=...`) sur les StructureDefinitions chargées manuellement via PUT. La ressource est bien stockée et accessible par ID mais pas retrouvée par recherche canonique.
 
-**Terminologies ANS** — Les CodeSystems de l'ANS (NOS, TRE_R13-CommuneOM...) ne sont pas disponibles sur le serveur de terminologies standard `tx.fhir.org`. Ils sont hébergés sur `smt.esante.gouv.fr` et ne sont pas intégrés dans Hapi sans configuration spécifique.
+**Terminologies ANS**: Les CodeSystems de l'ANS (NOS, TRE_R13-CommuneOM...) ne sont pas disponibles sur le serveur de terminologies standard `tx.fhir.org`. Ils sont hébergés sur `smt.esante.gouv.fr` et ne sont pas intégrés dans Hapi sans configuration spécifique.
 
 ### Variables d'environnement Railway
 
@@ -220,5 +210,5 @@ Au cours de ce projet, plusieurs comportements notables de Hapi FHIR 8.8.0 ont �
 - [x] 7 ressources FHIR créées (Organization, Practitioner, Patient, Encounter, 2x Observation, DiagnosticReport)
 - [x] Collection Postman exportée avec 20+ requêtes documentées
 - [x] Search parameters avancés démontrés (component search, $everything, Bundle transaction)
-- [x] Comportements Hapi 8.8.0 documentés (EncounterStatus STU3, indexation, terminologies ANS)
-- [ ] Vidéo démo (à venir)
+- [x] Comportements Hapi 8.8.0 documentés (EncounterStatus STU3, terminologies ANS, validation)
+
