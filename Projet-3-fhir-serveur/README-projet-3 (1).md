@@ -131,6 +131,19 @@ PATCH  /fhir/DiagnosticReport/dr-cardio-dupont-01
 DELETE /fhir/StructureDefinition/ste-marie-patient-ins
 ```
 
+### Choix PUT vs POST pour la création des ressources
+
+Toutes les ressources ont été créées via `PUT` plutôt que `POST` afin de **forcer des IDs métier lisibles** et cohérents avec la documentation :
+
+| Méthode | Comportement | Exemple |
+|---|---|---|
+| `POST /fhir/Patient` | ID généré aléatoirement par Hapi | `Patient/a3f7b2c1-9d4e...` |
+| `PUT /fhir/Patient/patient-jean-dupont` | ID forcé et maîtrisé | `Patient/patient-jean-dupont` |
+
+Ce choix facilite la lisibilité du portfolio et la cohérence des références entre ressources, par exemple `managingOrganization` référence `Organization/clinique-sainte-marie` dont l'ID est explicitement contrôlé.
+
+En production, les IDs sont généralement générés par le serveur (POST) et les identifiants métier (IPP, INS...) sont portés dans le tableau `identifier` de la ressource.
+
 ### Search parameters
 
 ```
