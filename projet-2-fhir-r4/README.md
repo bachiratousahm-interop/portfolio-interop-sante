@@ -75,6 +75,6 @@ avec le package `hl7.fhir.fr.core#2.1.0`.
 
 ## Outils utilisés
 
-- [FSH Online](https://fshschool.org/FSHOnline) — compilation FSH → JSON
-- [Simplifier.net](https://simplifier.net) — publication et visualisation
-- [validator.fhir.org](https://validator.fhir.org) — validation de l'instance
+- [FSH Online](https://fshschool.org/FSHOnline) - compilation FSH → JSON
+- [Simplifier.net](https://simplifier.net) - publication et visualisation
+- [validator.fhir.org](https://validator.fhir.org) - validation de l'instance
