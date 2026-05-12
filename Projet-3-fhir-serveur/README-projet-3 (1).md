@@ -142,8 +142,6 @@ Toutes les ressources ont été créées via `PUT` plutôt que `POST` afin de **
 
 Ce choix facilite la lisibilité du portfolio et la cohérence des références entre ressources, par exemple `managingOrganization` référence `Organization/clinique-sainte-marie` dont l'ID est explicitement contrôlé.
 
-En production, les IDs sont généralement générés par le serveur (POST) et les identifiants métier (IPP, INS...) sont portés dans le tableau `identifier` de la ressource.
-
 ### Search parameters
 
 ```
