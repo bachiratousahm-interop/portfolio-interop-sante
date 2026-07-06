@@ -3,7 +3,7 @@
   <nextMetaDataId>2</nextMetaDataId>
   <name>ORU_HL7v2_to_FHIR_SainteMarie</name>
   <description></description>
-  <revision>8</revision>
+  <revision>9</revision>
   <sourceConnector version="4.5.2">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -219,11 +219,10 @@ var valueType = msg[&apos;OBX&apos;][&apos;OBX.2&apos;].toString();
 var loincCode = msg[&apos;OBX&apos;][&apos;OBX.3&apos;][&apos;OBX.3.1&apos;].toString();
 var loincDisplay = msg[&apos;OBX&apos;][&apos;OBX.3&apos;][&apos;OBX.3.2&apos;].toString();
 var observationValue = msg[&apos;OBX&apos;][&apos;OBX.5&apos;].toString();
-var units = msg[&apos;OBX&apos;][&apos;OBX.6&apos;].toString();
-var refRange = msg[&apos;OBX&apos;][&apos;OBX.7&apos;].toString();
-var abnormalFlag = msg[&apos;OBX&apos;][&apos;OBX.8&apos;].toString();
-var resultStatus = msg[&apos;OBX&apos;][&apos;OBX.11&apos;].toString();
-
+var units = msg[&apos;OBX&apos;][&apos;OBX.6&apos;][&apos;OBX.6.1&apos;].toString();
+var refRange = msg[&apos;OBX&apos;][&apos;OBX.7&apos;][&apos;OBX.7.1&apos;].toString();
+var abnormalFlag = msg[&apos;OBX&apos;][&apos;OBX.8&apos;][&apos;OBX.8.1&apos;].toString();
+var resultStatus = msg[&apos;OBX&apos;][&apos;OBX.11&apos;][&apos;OBX.11.1&apos;].toString();
 // === Lecture de l&apos;IPP patient (segment PID, comme dans les scripts précédents) ===
 var ipp = msg[&apos;PID&apos;][&apos;PID.3&apos;][&apos;PID.3.1&apos;].toString();
 
@@ -525,7 +524,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1782818342010</time>
+        <time>1783343661732</time>
         <timezone>Europe/Paris</timezone>
       </lastModified>
       <pruningSettings>
