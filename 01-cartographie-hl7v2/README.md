@@ -1,79 +1,78 @@
 
-# Projet 1 : Cartographie des flux HL7 v2
+# Projet 1 — Cartographie des flux HL7 v2
 
-## Objectif
+## Contexte
 
-Modélisation complète des flux d'interopérabilité HL7 v2 de la Clinique 
-Sainte-Marie, établissement fictif de 180 lits à Montpellier.
+La Clinique Sainte-Marie est un établissement fictif de 180 lits disposant de plusieurs applications métier : DPI Orbis, Mirth Connect, LIS Sysmex, RIS/PACS Sectra, PUI Génois et SIC Hemera.
 
+L’objectif du projet est de cartographier et spécifier les principaux échanges HL7 v2.5 de l’existant avant une évolution progressive vers une architecture FHIR.
 
+## Objectifs
 
-## Établissement
+- Identifier les systèmes producteurs et consommateurs de données.
+- Cartographier les flux ADT, ORM, ORU, OMP et RDS.
+- Formaliser les règles de routage dans Mirth Connect.
+- Définir les règles de corrélation patient, séjour et prescription.
+- Préparer les cas de recette des interfaces.
 
-| Paramètre | Valeur |
-|-----------|--------|
-| Nom | Clinique Sainte-Marie (fictif) |
-| Localisation | Montpellier (34000) |
-| Capacité | 180 lits |
-| Spécialité | Cardiologie |
-| Patient de référence | Jean DUPONT - IPP 00012345 |
+## Architecture
 
+![Architecture existante du SIH](./diagrams/architecture-si-existant.svg)
 
+L’architecture repose sur un modèle hub-and-spoke dans lequel Mirth Connect assure la réception, le contrôle, la transformation et le routage des messages HL7 v2.
 
-## Systèmes documentés
+## Principaux flux
 
-| Système | Logiciel | Rôle |
-|---------|----------|------|
-| DPI | Easily | Dossier Patient Informatisé |
-| ESB | Mirth Connect | Bus d'intégration |
-| LIS | Sysmex | Laboratoire |
-| PACS | Sectra | Imagerie |
-| RIS | Sectra | Radiologie |
-| PUI | Pharma | Pharmacie |
-| SIC | Cardiobase | Cardiologie |
+| Domaine | Message | Source | Destination |
+|---|---|---|---|
+| Admission | ADT^A01 | DPI | LIS, RIS, PACS, PUI, SIC conditionnel |
+| Biologie | ORM^O01 | DPI | LIS |
+| Résultat biologique | ORU^R01 | LIS | DPI |
+| Imagerie | ORM^O01 | DPI | RIS |
+| Cardiologie | ORM^O01 | DPI | SIC |
+| Prescription médicament | OMP^O09 | SIC puis DPI | DPI puis PUI |
+| Dispensation | RDS^O13 | PUI | DPI |
+| Sortie | ADT^A03 | DPI | Applications abonnées |
 
+## Circuit du médicament
 
+Dans le scénario retenu, une prescription peut être initiée dans le SIC Hemera puis intégrée dans le DPI Orbis avant transmission à la PUI Génois.
 
-## Flux documentés (17 flux HL7 v2)
+Le DPI constitue le point central de traçabilité de la prescription dans le dossier patient.
 
-| Type | Description |
-|------|-------------|
-| ADT | Admission, Transfert, Sortie |
-| ORM | Ordres (examens, médicaments) |
-| ORU | Résultats d'examens |
-| MDM | Documents médicaux |
-| RDE | Prescription médicamenteuse |
-| RDS | Dispensation médicamenteuse |
-| SIU | Planification des rendez-vous |
+## Contrôles principaux
 
+Les contrôles portent notamment sur :
 
+- `PID-3` : identification patient ;
+- `PV1-19` : rattachement au séjour ;
+- `MSH-9` : type de message ;
+- `MSH-10` : unicité et détection des doublons ;
+- `ORC-2`, `OBR-2`, `OBR-3` : corrélation demande–résultat ;
+- `OBR-4` : contrôle du code métier ;
+- `MSA-1`, `MSA-2` : gestion des ACK.
 
-## Messages HL7 de référence
+## Tests de recette
 
-| Fichier | Message | Description |
-|---------|---------|-------------|
-| `messages/ADT_A01_Jean_Dupont.hl7` | ADT^A01 | Admission de Jean Dupont |
-| `messages/ORM_O01_Jean_Dupont.hl7` | ORM^O01 | Prescription d'examen |
-| `messages/ORU_R01_Jean_Dupont.hl7` | ORU^R01 | Résultat d'examen |
+Le projet couvre des cas nominaux et d’erreur : admission CARDIO, absence de PV1-19, résultat non corrélé, code métier inconnu, ACK en erreur et détection de doublons.
 
+## Livrables
 
+- [DAT — Cartographie HL7 v2](./docs/DAT_Sainte_Marie_Interoperabilite.pdf)
+- [Version Word](./docs/DAT_Sainte_Marie_Interoperabilite.docx)
 
-## Fichiers
+## Technologies et standards
 
-| Fichier | Description |
-|---------|-------------|
-| `DAT_Sainte_Marie_Interoperabilite.docx` | Dossier d'Architecture Technique complet |
-| `DAT_Sainte_Marie_Interoperabilite.pdf` | Version PDF du DAT |
-| `messages/` | Messages HL7 v2 annotés |
+- HL7 v2.5
+- Mirth Connect
+- MLLP
+- DICOM
+- Orbis
+- Sysmex
+- Sectra
+- Génois
+- Hemera
 
+## Limites du périmètre
 
-
-## Standard utilisé
-
-**HL7 v2.5**  standard de messagerie hospitalière pour les échanges 
-entre systèmes de santé.
-
-
-## Outils utilisés
-
-- **Draw.io** — schémas de flux et architecture
+Le projet 1 décrit l’architecture existante HL7 v2. La transformation vers FHIR R4, le serveur HAPI FHIR, IHE XDS.b/MHD, l’API Management et la sécurité sont traités dans les projets suivants du portfolio.
