@@ -1,0 +1,755 @@
+{
+  "info": {
+    "_postman_id": "37cf68af-2317-4be9-83e2-82437c94ff35",
+    "name": "Clinique sainte-Marie FHIR R4",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54352850",
+    "_collection_link": "https://go.postman.co/collection/54352850-37cf68af-2317-4be9-83e2-82437c94ff35?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "capabilityStatement",
+      "item": [
+        {
+          "name": "GET-Capabilitystatement",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/metadata",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "metadata"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Patient",
+      "item": [
+        {
+          "name": "creer Patient jean Dupont",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Patient\",\n  \"id\": \"patient-jean-dupont\",\n\n  \"meta\": {\n    \"profile\": [\n      \"https://clinique-sainte-marie.fr/fhir/StructureDefinition/SteMariePatientINS\"\n    ]\n  },\n\n  \"text\": {\n    \"status\": \"generated\",\n    \"div\": \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">Patient Jean Dupont</div>\"\n  },\n\n  \"identifier\": [\n    {\n      \"use\": \"usual\",\n      \"type\": {\n        \"coding\": [\n          {\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\n            \"code\": \"PI\",\n            \"display\": \"Patient internal identifier\"\n          }\n        ]\n      },\n      \"system\": \"https://clinique-sainte-marie.fr/fhir/Patient\",\n      \"value\": \"00012345\"\n    },\n\n    {\n      \"use\": \"official\",\n      \"type\": {\n        \"coding\": [\n          {\n            \"system\": \"https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-0203\",\n            \"code\": \"INS-NIR\",\n            \"display\": \"NIR définitif\"\n          }\n        ]\n      },\n      \"system\": \"urn:oid:1.2.250.1.213.1.4.8\",\n      \"value\": \"196803150123456\"\n    }\n  ],\n\n  \"name\": [\n    {\n      \"use\": \"official\",\n      \"family\": \"DUPONT\",\n      \"given\": [\n        \"JEAN\"\n      ],\n\n      \"extension\": [\n        {\n          \"url\": \"https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-patient-birth-list-given-name\",\n          \"valueString\": \"JEAN\"\n        }\n      ]\n    }\n  ],\n\n  \"gender\": \"male\",\n\n  \"birthDate\": \"1968-03-15\",\n\n  \"address\": [\n    {\n      \"use\": \"home\",\n      \"line\": [\n        \"12 rue des Lilas\"\n      ],\n      \"city\": \"Montpellier\",\n      \"postalCode\": \"34000\",\n      \"country\": \"FRA\"\n    }\n  ],\n\n  \"managingOrganization\": {\n    \"reference\": \"Organization/clinique-sainte-marie\",\n    \"display\": \"Clinique Sainte-Marie\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Patient/patient-jean-dupont",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Patient",
+                "patient-jean-dupont"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Recherche patient",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/Patient/patient-jean-dupont",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Patient",
+                "patient-jean-dupont"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Recherche DUPONT",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"DiagnosticReport\",\n  \"id\": \"dr-cardio-dupont-01\",\n  \"status\": \"final\",\n  \"category\": [\n    {\n      \"coding\": [\n        {\n          \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0074\",\n          \"code\": \"CTU\",\n          \"display\": \"Cardiologie\"\n        }\n      ]\n    }\n  ],\n  \"code\": {\n    \"coding\": [\n      {\n        \"system\": \"http://loinc.org\",\n        \"code\": \"11488-4\",\n        \"display\": \"Compte-rendu de consultation\"\n      }\n    ]\n  },\n  \"subject\": {\n    \"reference\": \"Patient/patient-jean-dupont\"\n  },\n  \"encounter\": {\n    \"reference\": \"Encounter/encounter-dupont-cardio-01\"\n  },\n  \"effectiveDateTime\": \"2026-03-12T09:30:00+01:00\",\n  \"performer\": [\n    {\n      \"reference\": \"Practitioner/dr-martin\"\n    }\n  ],\n  \"result\": [\n    {\n      \"reference\": \"Observation/obs-tension-dupont-01\"\n    }\n  ],\n  \"conclusion\": \"Patient hypertendu. Tension artérielle 145/92 mmHg. Mise sous traitement antihypertenseur. Contrôle dans 3 mois.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/Patient?family=DUPONT",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Patient"
+              ],
+              "query": [
+                {
+                  "key": "family",
+                  "value": "DUPONT"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "pat_e",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/Patient/patient-jean-dupont/$everything",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Patient",
+                "patient-jean-dupont",
+                "$everything"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "validation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Patient\",\n  \"id\": \"patient-jean-dupont\",\n\n  \"meta\": {\n    \"profile\": [\n      \"https://fhir-sainte-marie.up.railway.app/fhir/StructureDefinition/SteMariePatientINS\"\n    ]\n  },\n \"text\": {\n    \"status\": \"generated\",\n    \"div\": \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">Patient Jean Dupont - identité de test Clinique Sainte-Marie</div>\"\n  },\n  \"extension\": [\n    {\n      \"url\": \"https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-identity-reliability\",\n      \"extension\": [\n        {\n          \"url\": \"methodCollection\",\n          \"valueCoding\": {\n            \"system\": \"https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-method-collection\",\n            \"code\": \"INSI\",\n            \"display\": \"Téléservice INSI\"\n          }\n        },\n        {\n          \"url\": \"identityStatus\",\n          \"valueCoding\": {\n            \"system\": \"https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-0445\",\n            \"code\": \"VALI\",\n            \"display\": \"Identité validée\"\n          }\n        }\n      ]\n    },\n    {\n      \"url\": \"http://hl7.org/fhir/StructureDefinition/patient-birthPlace\",\n      \"valueAddress\": {\n        \"extension\": [\n          {\n            \"url\": \"https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-address-insee-code\",\n            \"valueCoding\": {\n              \"system\": \"https://mos.esante.gouv.fr/NOS/TRE_R13-CommuneOM/FHIR/TRE-R13-CommuneOM\",\n              \"code\": \"34172\",\n              \"display\": \"Montpellier\"\n            }\n          }\n        ],\n        \"city\": \"Montpellier\",\n        \"country\": \"FRA\"\n      }\n    }\n  ],\n\n  \"identifier\": [\n    {\n      \"use\": \"usual\",\n      \"type\": {\n        \"coding\": [\n          {\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\n            \"code\": \"PI\",\n            \"display\": \"Patient internal identifier\"\n          }\n        ]\n      },\n      \"system\": \"https://fhir-sainte-marie.up.railway.app/fhir/Patient\",\n      \"value\": \"00012345\"\n    },\n    {\n      \"use\": \"official\",\n      \"type\": {\n        \"coding\": [\n          {\n            \"system\": \"https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-0203\",\n            \"code\": \"INS-NIR-TEST\",\n            \"display\": \"NIR TEST\"\n          }\n        ]\n      },\n      \"system\": \"urn:oid:1.2.250.1.213.1.4.10\",\n      \"value\": \"196803150123456\"\n    }\n  ],\n\n  \"name\": [\n    {\n      \"use\": \"official\",\n      \"extension\": [\n        {\n          \"url\": \"https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-patient-birth-list-given-name\",\n          \"valueString\": \"JEAN MARIE\"\n        }\n      ],\n      \"family\": \"DUPONT\",\n      \"given\": [\n        \"JEAN\"\n      ]\n    }\n  ],\n\n  \"gender\": \"male\",\n\n  \"birthDate\": \"1968-03-15\",\n\n  \"address\": [\n    {\n      \"use\": \"home\",\n      \"line\": [\n        \"12 rue des Lilas\"\n      ],\n      \"city\": \"Montpellier\",\n      \"postalCode\": \"34000\",\n      \"country\": \"FRA\"\n    }\n  ],\n\n  \"managingOrganization\": {\n    \"reference\": \"Organization/clinique-sainte-marie\",\n    \"display\": \"Clinique Sainte-Marie\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Patient/$validate?prolfile={{profileSteMarie}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Patient",
+                "$validate"
+              ],
+              "query": [
+                {
+                  "key": "prolfile",
+                  "value": "{{profileSteMarie}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Organisation",
+      "item": [
+        {
+          "name": "Organisation",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Organization\",\n  \"id\": \"clinique-sainte-marie\",\n  \"name\": \"Clinique Sainte-Marie\",\n  \"alias\": [\"Sainte-Marie\"],\n  \"telecom\": [\n    {\n      \"system\": \"phone\",\n      \"value\": \"+33 4 67 00 00 00\",\n      \"use\": \"work\"\n    }\n  ],\n  \"address\": [\n    {\n      \"use\": \"work\",\n      \"line\": [\"1 Rue de la Santé\"],\n      \"city\": \"Montpellier\",\n      \"postalCode\": \"34000\",\n      \"country\": \"FR\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Organization/clinique-sainte-marie",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Organization",
+                "clinique-sainte-marie"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Practitioner",
+      "item": [
+        {
+          "name": "Creer dr martin",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Practitioner\",\n  \"id\": \"dr-martin\",\n  \"name\": [\n    {\n      \"use\": \"official\",\n      \"family\": \"MARTIN\",\n      \"given\": [\"Pierre\"],\n      \"prefix\": [\"Dr\"]\n    }\n  ],\n  \"gender\": \"male\",\n  \"birthDate\": \"1975-06-12\",\n  \"telecom\": [\n    {\n      \"system\": \"phone\",\n      \"value\": \"+33 4 67 00 00 01\",\n      \"use\": \"work\"\n    }\n  ],\n  \"qualification\": [\n    {\n      \"code\": {\n        \"coding\": [\n          {\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0360\",\n            \"code\": \"MD\",\n            \"display\": \"Doctor of Medicine\"\n          }\n        ],\n        \"text\": \"Cardiologue\"\n      }\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Practitioner/dr-martin",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Practitioner",
+                "dr-martin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Recherche medecin",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Encounter",
+      "item": [
+        {
+          "name": "creer consultation",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Encounter\",\n  \"id\": \"encounter-dupont-cardio-01\",\n  \"status\": \"finished\",\n  \"class\": {\n    \"system\": \"http://terminology.hl7.org/CodeSystem/v3-ActCode\",\n    \"code\": \"AMB\",\n    \"display\": \"Consultation ambulatoire\"\n  },\n  \"type\": [\n    {\n      \"coding\": [\n        {\n          \"system\": \"http://snomed.info/sct\",\n          \"code\": \"11429006\",\n          \"display\": \"Consultation cardiologie\"\n        }\n      ]\n    }\n  ],\n  \"subject\": {\n    \"reference\": \"Patient/patient-jean-dupont\",\n    \"display\": \"Jean DUPONT\"\n  },\n  \"participant\": [\n    {\n      \"individual\": {\n        \"reference\": \"Practitioner/dr-martin\",\n        \"display\": \"Dr. Pierre MARTIN\"\n      }\n    }\n  ],\n  \"serviceProvider\": {\n    \"reference\": \"Organization/clinique-sainte-marie\",\n    \"display\": \"Clinique Sainte-Marie\"\n  },\n  \"period\": {\n    \"start\": \"2026-03-12T09:00:00+01:00\",\n    \"end\": \"2026-03-12T09:30:00+01:00\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Encounter/encounter-dupont-cardio-01",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Encounter",
+                "encounter-dupont-cardio-01"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "visite",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/Encounter/encounter-dupont-cardio-01",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Encounter",
+                "encounter-dupont-cardio-01"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Observation",
+      "item": [
+        {
+          "name": "TA",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/fhir+json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Observation\",\n  \"id\": \"obs-tension-dupont-01\",\n  \"status\": \"final\",\n  \"category\": [\n    {\n      \"coding\": [\n        {\n          \"system\": \"http://terminology.hl7.org/CodeSystem/observation-category\",\n          \"code\": \"vital-signs\",\n          \"display\": \"Signes vitaux\"\n        }\n      ]\n    }\n  ],\n  \"code\": {\n    \"coding\": [\n      {\n        \"system\": \"http://loinc.org\",\n        \"code\": \"85354-9\",\n        \"display\": \"Tension artérielle\"\n      }\n    ]\n  },\n  \"subject\": {\n    \"reference\": \"Patient/patient-jean-dupont\"\n  },\n  \"encounter\": {\n    \"reference\": \"Encounter/encounter-dupont-cardio-01\"\n  },\n  \"effectiveDateTime\": \"2026-03-12T09:15:00+01:00\",\n  \"performer\": [\n    {\n      \"reference\": \"Practitioner/dr-martin\"\n    }\n  ],\n  \"component\": [\n    {\n      \"code\": {\n        \"coding\": [\n          {\n            \"system\": \"http://loinc.org\",\n            \"code\": \"8480-6\",\n            \"display\": \"Pression artérielle systolique\"\n          }\n        ]\n      },\n      \"valueQuantity\": {\n        \"value\": 145,\n        \"unit\": \"mmHg\",\n        \"system\": \"http://unitsofmeasure.org\",\n        \"code\": \"mm[Hg]\"\n      }\n    },\n    {\n      \"code\": {\n        \"coding\": [\n          {\n            \"system\": \"http://loinc.org\",\n            \"code\": \"8462-4\",\n            \"display\": \"Pression artérielle diastolique\"\n          }\n        ]\n      },\n      \"valueQuantity\": {\n        \"value\": 92,\n        \"unit\": \"mmHg\",\n        \"system\": \"http://unitsofmeasure.org\",\n        \"code\": \"mm[Hg]\"\n      }\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Observation/obs-tension-dupont-01",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Observation",
+                "obs-tension-dupont-01"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "NFS",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Observation\",\n  \"id\": \"obs-nfs-dupont-01\",\n  \"status\": \"final\",\n  \"category\": [\n    {\n      \"coding\": [\n        {\n          \"system\": \"http://terminology.hl7.org/CodeSystem/observation-category\",\n          \"code\": \"laboratory\",\n          \"display\": \"Biologie\"\n        }\n      ]\n    }\n  ],\n  \"code\": {\n    \"coding\": [\n      {\n        \"system\": \"http://loinc.org\",\n        \"code\": \"58410-2\",\n        \"display\": \"Numération Formule Sanguine\"\n      }\n    ]\n  },\n  \"subject\": {\n    \"reference\": \"Patient/patient-jean-dupont\"\n  },\n  \"encounter\": {\n    \"reference\": \"Encounter/encounter-dupont-cardio-01\"\n  },\n  \"effectiveDateTime\": \"2026-03-12T08:00:00+01:00\",\n  \"performer\": [\n    {\n      \"reference\": \"Practitioner/dr-martin\"\n    }\n  ],\n  \"component\": [\n    {\n      \"code\": {\n        \"coding\": [\n          {\n            \"system\": \"http://loinc.org\",\n            \"code\": \"6690-2\",\n            \"display\": \"Leucocytes\"\n          }\n        ]\n      },\n      \"valueQuantity\": {\n        \"value\": 7.2,\n        \"unit\": \"10*9/L\",\n        \"system\": \"http://unitsofmeasure.org\",\n        \"code\": \"10*9/L\"\n      }\n    },\n    {\n      \"code\": {\n        \"coding\": [\n          {\n            \"system\": \"http://loinc.org\",\n            \"code\": \"789-8\",\n            \"display\": \"Érythrocytes\"\n          }\n        ]\n      },\n      \"valueQuantity\": {\n        \"value\": 4.5,\n        \"unit\": \"10*12/L\",\n        \"system\": \"http://unitsofmeasure.org\",\n        \"code\": \"10*12/L\"\n      }\n    },\n    {\n      \"code\": {\n        \"coding\": [\n          {\n            \"system\": \"http://loinc.org\",\n            \"code\": \"718-7\",\n            \"display\": \"Hémoglobine\"\n          }\n        ]\n      },\n      \"valueQuantity\": {\n        \"value\": 13.5,\n        \"unit\": \"g/dL\",\n        \"system\": \"http://unitsofmeasure.org\",\n        \"code\": \"g/dL\"\n      }\n    },\n    {\n      \"code\": {\n        \"coding\": [\n          {\n            \"system\": \"http://loinc.org\",\n            \"code\": \"777-3\",\n            \"display\": \"Plaquettes\"\n          }\n        ]\n      },\n      \"valueQuantity\": {\n        \"value\": 210,\n        \"unit\": \"10*9/L\",\n        \"system\": \"http://unitsofmeasure.org\",\n        \"code\": \"10*9/L\"\n      }\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Observation/obs-nfs-dupont-01",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Observation",
+                "obs-nfs-dupont-01"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Recherche analyses patients",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/Observation?patient=patient-jean-dupont",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Observation"
+              ],
+              "query": [
+                {
+                  "key": "patient",
+                  "value": "patient-jean-dupont"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "recherche NFS",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/Observation?patient=patient-jean-dupont&code=58410-2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Observation"
+              ],
+              "query": [
+                {
+                  "key": "patient",
+                  "value": "patient-jean-dupont"
+                },
+                {
+                  "key": "code",
+                  "value": "58410-2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "rech .labo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/Observation?patient=patient-jean-dupont&category=laboratory",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Observation"
+              ],
+              "query": [
+                {
+                  "key": "patient",
+                  "value": "patient-jean-dupont"
+                },
+                {
+                  "key": "category",
+                  "value": "laboratory"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rech.leuco",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/Observation?component-code=6690-2&component-value-quantity=gt5.0",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Observation"
+              ],
+              "query": [
+                {
+                  "key": "component-code",
+                  "value": "6690-2"
+                },
+                {
+                  "key": "component-value-quantity",
+                  "value": "gt5.0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "validation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Observation\",\n  \"id\": \"obs-tension-dupont-01\",\n  \"status\": \"final\",\n  \"text\": {\n  \"status\": \"generated\",\n  \"div\": \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">Tension artérielle : 145/92 mmHg</div>\"\n},\n  \"category\": [\n    {\n      \"coding\": [\n        {\n          \"system\": \"http://terminology.hl7.org/CodeSystem/observation-category\",\n          \"code\": \"vital-signs\",\n          \"display\": \"Vital signs\"\n        }\n      ]\n    }\n  ],\n  \"code\": {\n    \"coding\": [\n    {\n      \"system\": \"http://loinc.org\",\n      \"code\": \"85354-9\",\n      \"display\": \"Blood pressure panel with all children optional\"\n    }\n  ],\n  \"text\": \"Tension artérielle\"\n},\n  \"subject\": {\n    \"reference\": \"Patient/patient-jean-dupont\"\n  },\n  \"encounter\": {\n    \"reference\": \"Encounter/encounter-dupont-cardio-01\"\n  },\n  \"effectiveDateTime\": \"2026-03-12T09:15:00+01:00\",\n  \"performer\": [\n    {\n      \"reference\": \"Practitioner/dr-martin\"\n    }\n  ],\n  \"component\": [\n    {\n      \"code\": {\n  \"coding\": [\n    {\n      \"system\": \"http://loinc.org\",\n      \"code\": \"8480-6\",\n      \"display\": \"Systolic blood pressure\"\n    }\n  ],\n  \"text\": \"Pression artérielle systolique\"\n},\n      \"valueQuantity\": {\n        \"value\": 145,\n        \"unit\": \"mmHg\",\n        \"system\": \"http://unitsofmeasure.org\",\n        \"code\": \"mm[Hg]\"\n      }\n    },\n    {\n      \"code\": {\n  \"coding\": [\n    {\n      \"system\": \"http://loinc.org\",\n      \"code\": \"8462-4\",\n      \"display\": \"Diastolic blood pressure\"\n    }\n  ],\n  \"text\": \"Pression artérielle diastolique\"\n},\n      \"valueQuantity\": {\n        \"value\": 92,\n        \"unit\": \"mmHg\",\n        \"system\": \"http://unitsofmeasure.org\",\n        \"code\": \"mm[Hg]\"\n      }\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Observation/$validate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Observation",
+                "$validate"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "DiagnosticReport",
+      "item": [
+        {
+          "name": "Rapport Cardio",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"DiagnosticReport\",\n  \"id\": \"dr-cardio-dupont-01\",\n  \"status\": \"final\",\n  \"category\": [\n    {\n      \"coding\": [\n        {\n          \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0074\",\n          \"code\": \"CTU\",\n          \"display\": \"Cardiologie\"\n        }\n      ]\n    }\n  ],\n  \"code\": {\n    \"coding\": [\n      {\n        \"system\": \"http://loinc.org\",\n        \"code\": \"11488-4\",\n        \"display\": \"Compte-rendu de consultation\"\n      }\n    ]\n  },\n  \"subject\": {\n    \"reference\": \"Patient/patient-jean-dupont\"\n  },\n  \"encounter\": {\n    \"reference\": \"Encounter/encounter-dupont-cardio-01\"\n  },\n  \"effectiveDateTime\": \"2026-03-12T09:30:00+01:00\",\n  \"performer\": [\n    {\n      \"reference\": \"Practitioner/dr-martin\"\n    }\n  ],\n  \"result\": [\n    {\n      \"reference\": \"Observation/obs-tension-dupont-01\"\n    }\n  ],\n  \"conclusion\": \"Patient hypertendu. Tension artérielle 145/92 mmHg. Mise sous traitement antihypertenseur. Contrôle dans 3 mois.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/DiagnosticReport/dr-cardio-dupont-01",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "DiagnosticReport",
+                "dr-cardio-dupont-01"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Patch _rapport",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json-patch+json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/conclusion\",\n    \"value\": \"Patient hypertendu. TA 145/92 mmHg. Mise sous Amlodipine 5mg/j. Contrôle ECG et bilan lipidique dans 3 mois. Régime hyposodé recommandé.\"\n  }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/DiagnosticReport/dr-cardio-dupont-01",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "DiagnosticReport",
+                "dr-cardio-dupont-01"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transaction",
+      "item": [
+        {
+          "name": "transaction",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/fhir+json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Bundle\",\n  \"type\": \"transaction\",\n  \"entry\": [\n    {\n      \"fullUrl\": \"urn:uuid:patient-marie-martin\",\n      \"resource\": {\n        \"resourceType\": \"Patient\",\n        \"id\": \"patient-marie-martin\",\n        \"name\": [\n          {\n            \"use\": \"official\",\n            \"family\": \"MARTIN\",\n            \"given\": [\"Marie\"]\n          }\n        ],\n        \"gender\": \"female\",\n        \"birthDate\": \"1975-04-22\",\n        \"managingOrganization\": {\n          \"reference\": \"Organization/clinique-sainte-marie\"\n        }\n      },\n      \"request\": {\n        \"method\": \"PUT\",\n        \"url\": \"Patient/patient-marie-martin\"\n      }\n    },\n    {\n      \"fullUrl\": \"urn:uuid:encounter-martin-cardio-01\",\n      \"resource\": {\n        \"resourceType\": \"Encounter\",\n        \"id\": \"encounter-martin-cardio-01\",\n        \"status\": \"finished\",\n        \"class\": {\n          \"system\": \"http://terminology.hl7.org/CodeSystem/v3-ActCode\",\n          \"code\": \"AMB\",\n          \"display\": \"Consultation ambulatoire\"\n        },\n        \"subject\": {\n          \"reference\": \"Patient/patient-marie-martin\"\n        },\n        \"serviceProvider\": {\n          \"reference\": \"Organization/clinique-sainte-marie\"\n        },\n        \"period\": {\n          \"start\": \"2026-03-15T10:00:00+01:00\",\n          \"end\": \"2026-03-15T10:30:00+01:00\"\n        }\n      },\n      \"request\": {\n        \"method\": \"PUT\",\n        \"url\": \"Encounter/encounter-martin-cardio-01\"\n      }\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}",
+              "host": [
+                "{{base_url}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Structure definition",
+      "item": [
+        {
+          "name": "Structure def",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/fhir+json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"StructureDefinition\",\n  \"id\": \"SteMariePatientINS\",\n  \"url\": \"https://clinique-sainte-marie.fr/fhir/StructureDefinition/SteMariePatientINS\",\n  \"version\": \"1.0.1\",\n  \"name\": \"SteMariePatientINS\",\n  \"title\": \"Profil Patient INS — Clinique Sainte-Marie\",\n  \"status\": \"active\",\n  \"description\": \"Profil Patient pour la Clinique Sainte-Marie, dérivé de FRCorePatientINSProfile.\\nAjoute les contraintes propres à l'établissement :\\nIPP obligatoire, nom, date de naissance, sexe et organisation gestionnaire requis.\",\n  \"fhirVersion\": \"4.0.1\",\n  \"kind\": \"resource\",\n  \"abstract\": false,\n  \"type\": \"Patient\",\n  \"baseDefinition\": \"https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-patient-ins\",\n  \"derivation\": \"constraint\",\n  \"differential\": {\n    \"element\": [\n      {\n        \"id\": \"Patient.identifier\",\n        \"path\": \"Patient.identifier\",\n        \"min\": 2\n      },\n      {\n        \"id\": \"Patient.identifier:IPP\",\n        \"path\": \"Patient.identifier\",\n        \"sliceName\": \"IPP\",\n        \"min\": 1,\n        \"max\": \"1\"\n      },\n      {\n        \"id\": \"Patient.identifier:IPP.type.coding.system\",\n        \"path\": \"Patient.identifier.type.coding.system\",\n        \"patternUri\": \"http://terminology.hl7.org/CodeSystem/v2-0203\"\n      },\n      {\n        \"id\": \"Patient.identifier:IPP.type.coding.code\",\n        \"path\": \"Patient.identifier.type.coding.code\",\n        \"patternCode\": \"PI\"\n      },\n      {\n        \"id\": \"Patient.identifier:IPP.system\",\n        \"path\": \"Patient.identifier.system\",\n        \"patternUri\": \"https://clinique-sainte-marie.fr/fhir/Patient\"\n      },\n      {\n        \"id\": \"Patient.identifier:IPP.value\",\n        \"path\": \"Patient.identifier.value\",\n        \"min\": 1\n      },\n      {\n        \"id\": \"Patient.name\",\n        \"path\": \"Patient.name\"\n      },\n      {\n        \"id\": \"Patient.name.family\",\n        \"path\": \"Patient.name.family\",\n        \"min\": 1\n      },\n      {\n        \"id\": \"Patient.name.given\",\n        \"path\": \"Patient.name.given\",\n        \"min\": 1\n      },\n      {\n        \"id\": \"Patient.name:usualName\",\n        \"path\": \"Patient.name\",\n        \"sliceName\": \"usualName\"\n      },\n      {\n        \"id\": \"Patient.name:usualName.family\",\n        \"path\": \"Patient.name.family\",\n        \"min\": 1\n      },\n      {\n        \"id\": \"Patient.name:usualName.given\",\n        \"path\": \"Patient.name.given\",\n        \"min\": 1\n      },\n      {\n        \"id\": \"Patient.managingOrganization\",\n        \"path\": \"Patient.managingOrganization\",\n        \"min\": 1\n      }\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/StructureDefinition/SteMariePatientINS",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "StructureDefinition",
+                "SteMariePatientINS"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Structure_Definition",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/fhir+json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Patient\",\n  \"id\": \"patient-jean-dupont\",\n\n  \"meta\": {\n    \"profile\": [\n      \"https://fhir-sainte-marie.up.railway.app/fhir/StructureDefinition/SteMariePatientINS\"\n    ]\n  },\n \"text\": {\n    \"status\": \"generated\",\n    \"div\": \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">Patient Jean Dupont - identité de test Clinique Sainte-Marie</div>\"\n  },\n  \"extension\": [\n    {\n      \"url\": \"https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-identity-reliability\",\n      \"extension\": [\n        {\n          \"url\": \"methodCollection\",\n          \"valueCoding\": {\n            \"system\": \"https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-method-collection\",\n            \"code\": \"INSI\",\n            \"display\": \"Téléservice INSI\"\n          }\n        },\n        {\n          \"url\": \"identityStatus\",\n          \"valueCoding\": {\n            \"system\": \"https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-0445\",\n            \"code\": \"VALI\",\n            \"display\": \"Identité validée\"\n          }\n        }\n      ]\n    },\n    {\n      \"url\": \"http://hl7.org/fhir/StructureDefinition/patient-birthPlace\",\n      \"valueAddress\": {\n        \"extension\": [\n          {\n            \"url\": \"https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-address-insee-code\",\n            \"valueCoding\": {\n              \"system\": \"https://mos.esante.gouv.fr/NOS/TRE_R13-CommuneOM/FHIR/TRE-R13-CommuneOM\",\n              \"code\": \"34172\",\n              \"display\": \"Montpellier\"\n            }\n          }\n        ],\n        \"city\": \"Montpellier\",\n        \"country\": \"FRA\"\n      }\n    }\n  ],\n\n  \"identifier\": [\n    {\n      \"use\": \"usual\",\n      \"type\": {\n        \"coding\": [\n          {\n            \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0203\",\n            \"code\": \"PI\",\n            \"display\": \"Patient internal identifier\"\n          }\n        ]\n      },\n      \"system\": \"https://fhir-sainte-marie.up.railway.app/fhir/Patient\",\n      \"value\": \"00012345\"\n    },\n    {\n      \"use\": \"official\",\n      \"type\": {\n        \"coding\": [\n          {\n            \"system\": \"https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-0203\",\n            \"code\": \"INS-NIR-TEST\",\n            \"display\": \"NIR TEST\"\n          }\n        ]\n      },\n      \"system\": \"urn:oid:1.2.250.1.213.1.4.10\",\n      \"value\": \"196803150123456\"\n    }\n  ],\n\n  \"name\": [\n    {\n      \"use\": \"official\",\n      \"extension\": [\n        {\n          \"url\": \"https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-patient-birth-list-given-name\",\n          \"valueString\": \"JEAN MARIE\"\n        }\n      ],\n      \"family\": \"DUPONT\",\n      \"given\": [\n        \"JEAN\"\n      ]\n    }\n  ],\n\n  \"gender\": \"male\",\n\n  \"birthDate\": \"1968-03-15\",\n\n  \"address\": [\n    {\n      \"use\": \"home\",\n      \"line\": [\n        \"12 rue des Lilas\"\n      ],\n      \"city\": \"Montpellier\",\n      \"postalCode\": \"34000\",\n      \"country\": \"FRA\"\n    }\n  ],\n\n  \"managingOrganization\": {\n    \"reference\": \"Organization/clinique-sainte-marie\",\n    \"display\": \"Clinique Sainte-Marie\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/StructureDefinition?url={{profileSteMarie}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "StructureDefinition"
+              ],
+              "query": [
+                {
+                  "key": "url",
+                  "value": "{{profileSteMarie}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Structure_Definition Copy",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/fhir+json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/StructureDefinition/SteMariePatientINS",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "StructureDefinition",
+                "SteMariePatientINS"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Codesystem",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Codesystem",
+      "item": [
+        {
+          "name": "validate-code",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/CodeSystem/$validate-code?url=https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-0203&code=INS-NIR-TEST",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "CodeSystem",
+                "$validate-code"
+              ],
+              "query": [
+                {
+                  "key": "url",
+                  "value": "https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-0203"
+                },
+                {
+                  "key": "code",
+                  "value": "INS-NIR-TEST"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
