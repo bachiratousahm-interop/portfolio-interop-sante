@@ -1,0 +1,73 @@
+{
+  "resourceType": "Observation",
+  "id": "obs-tension-dupont-01",
+  "status": "final",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+          "code": "vital-signs",
+          "display": "Signes vitaux"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "85354-9",
+        "display": "Tension artérielle"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/patient-jean-dupont"
+  },
+  "encounter": {
+    "reference": "Encounter/encounter-dupont-cardio-01"
+  },
+  "effectiveDateTime": "2026-03-12T09:15:00+01:00",
+  "performer": [
+    {
+      "reference": "Practitioner/dr-martin"
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "8480-6",
+            "display": "Pression artérielle systolique"
+          }
+        ]
+      },
+      "valueQuantity": {
+        "value": 145,
+        "unit": "mmHg",
+        "system": "http://unitsofmeasure.org",
+        "code": "mm[Hg]"
+      }
+    },
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "8462-4",
+            "display": "Pression artérielle diastolique"
+          }
+        ]
+      },
+      "valueQuantity": {
+        "value": 92,
+        "unit": "mmHg",
+        "system": "http://unitsofmeasure.org",
+        "code": "mm[Hg]"
+      }
+    }
+  ]
+}

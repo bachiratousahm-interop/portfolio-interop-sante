@@ -1,0 +1,107 @@
+{
+  "resourceType": "Observation",
+  "id": "obs-nfs-dupont-01",
+  "status": "final",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+          "code": "laboratory",
+          "display": "Biologie"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "58410-2",
+        "display": "Numération Formule Sanguine"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/patient-jean-dupont"
+  },
+  "encounter": {
+    "reference": "Encounter/encounter-dupont-cardio-01"
+  },
+  "effectiveDateTime": "2026-03-12T08:00:00+01:00",
+  "performer": [
+    {
+      "reference": "Practitioner/dr-martin"
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "6690-2",
+            "display": "Leucocytes"
+          }
+        ]
+      },
+      "valueQuantity": {
+        "value": 7.2,
+        "unit": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "code": "10*9/L"
+      }
+    },
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "789-8",
+            "display": "Érythrocytes"
+          }
+        ]
+      },
+      "valueQuantity": {
+        "value": 4.5,
+        "unit": "10*12/L",
+        "system": "http://unitsofmeasure.org",
+        "code": "10*12/L"
+      }
+    },
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "718-7",
+            "display": "Hémoglobine"
+          }
+        ]
+      },
+      "valueQuantity": {
+        "value": 13.5,
+        "unit": "g/dL",
+        "system": "http://unitsofmeasure.org",
+        "code": "g/dL"
+      }
+    },
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "777-3",
+            "display": "Plaquettes"
+          }
+        ]
+      },
+      "valueQuantity": {
+        "value": 210,
+        "unit": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "code": "10*9/L"
+      }
+    }
+  ]
+}

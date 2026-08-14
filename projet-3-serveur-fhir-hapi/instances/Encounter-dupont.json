@@ -1,0 +1,41 @@
+{
+  "resourceType": "Encounter",
+  "id": "encounter-dupont-cardio-01",
+  "status": "finished",
+  "class": {
+    "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+    "code": "AMB",
+    "display": "Consultation ambulatoire"
+  },
+  "type": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "11429006",
+          "display": "Consultation cardiologie"
+        }
+      ]
+    }
+  ],
+  "subject": {
+    "reference": "Patient/patient-jean-dupont",
+    "display": "Jean DUPONT"
+  },
+  "participant": [
+    {
+      "individual": {
+        "reference": "Practitioner/dr-martin",
+        "display": "Dr. Pierre MARTIN"
+      }
+    }
+  ],
+  "serviceProvider": {
+    "reference": "Organization/clinique-sainte-marie",
+    "display": "Clinique Sainte-Marie"
+  },
+  "period": {
+    "start": "2026-03-12T09:00:00+01:00",
+    "end": "2026-03-12T09:30:00+01:00"
+  }
+}
