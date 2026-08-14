@@ -8,7 +8,7 @@
         {
           "system": "http://terminology.hl7.org/CodeSystem/observation-category",
           "code": "vital-signs",
-          "display": "Signes vitaux"
+          "display": "Vital signs"
         }
       ]
     }
@@ -18,7 +18,7 @@
       {
         "system": "http://loinc.org",
         "code": "85354-9",
-        "display": "Tension artérielle"
+        "display": "Blood pressure panel with all children optional"
       }
     ]
   },
@@ -41,7 +41,7 @@
           {
             "system": "http://loinc.org",
             "code": "8480-6",
-            "display": "Pression artérielle systolique"
+            "display": "Systolic blood pressure"
           }
         ]
       },
@@ -58,7 +58,7 @@
           {
             "system": "http://loinc.org",
             "code": "8462-4",
-            "display": "Pression artérielle diastolique"
+            "display": "Diastolic blood pressure"
           }
         ]
       },

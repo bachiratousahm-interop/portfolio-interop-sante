@@ -88,7 +88,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"resourceType\": \"DiagnosticReport\",\n  \"id\": \"dr-cardio-dupont-01\",\n  \"status\": \"final\",\n  \"category\": [\n    {\n      \"coding\": [\n        {\n          \"system\": \"http://terminology.hl7.org/CodeSystem/v2-0074\",\n          \"code\": \"CTU\",\n          \"display\": \"Cardiologie\"\n        }\n      ]\n    }\n  ],\n  \"code\": {\n    \"coding\": [\n      {\n        \"system\": \"http://loinc.org\",\n        \"code\": \"11488-4\",\n        \"display\": \"Compte-rendu de consultation\"\n      }\n    ]\n  },\n  \"subject\": {\n    \"reference\": \"Patient/patient-jean-dupont\"\n  },\n  \"encounter\": {\n    \"reference\": \"Encounter/encounter-dupont-cardio-01\"\n  },\n  \"effectiveDateTime\": \"2026-03-12T09:30:00+01:00\",\n  \"performer\": [\n    {\n      \"reference\": \"Practitioner/dr-martin\"\n    }\n  ],\n  \"result\": [\n    {\n      \"reference\": \"Observation/obs-tension-dupont-01\"\n    }\n  ],\n  \"conclusion\": \"Patient hypertendu. Tension artérielle 145/92 mmHg. Mise sous traitement antihypertenseur. Contrôle dans 3 mois.\"\n}"
+              "raw": ""
             },
             "url": {
               "raw": "{{base_url}}/Patient?family=DUPONT",
@@ -109,7 +109,7 @@
           "response": []
         },
         {
-          "name": "pat_e",
+          "name": "pat_everything",
           "request": {
             "method": "GET",
             "header": [],
@@ -142,7 +142,7 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/Patient/$validate?prolfile={{profileSteMarie}}",
+              "raw": "{{base_url}}/Patient/$validate?profile={{profileSteMarie}}",
               "host": [
                 "{{base_url}}"
               ],
@@ -152,19 +152,11 @@
               ],
               "query": [
                 {
-                  "key": "prolfile",
+                  "key": "profile",
                   "value": "{{profileSteMarie}}"
                 }
               ]
             }
-          },
-          "response": []
-        },
-        {
-          "name": "New Request",
-          "request": {
-            "method": "GET",
-            "header": []
           },
           "response": []
         }
@@ -308,7 +300,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"resourceType\": \"Observation\",\n  \"id\": \"obs-tension-dupont-01\",\n  \"status\": \"final\",\n  \"category\": [\n    {\n      \"coding\": [\n        {\n          \"system\": \"http://terminology.hl7.org/CodeSystem/observation-category\",\n          \"code\": \"vital-signs\",\n          \"display\": \"Signes vitaux\"\n        }\n      ]\n    }\n  ],\n  \"code\": {\n    \"coding\": [\n      {\n        \"system\": \"http://loinc.org\",\n        \"code\": \"85354-9\",\n        \"display\": \"Tension artérielle\"\n      }\n    ]\n  },\n  \"subject\": {\n    \"reference\": \"Patient/patient-jean-dupont\"\n  },\n  \"encounter\": {\n    \"reference\": \"Encounter/encounter-dupont-cardio-01\"\n  },\n  \"effectiveDateTime\": \"2026-03-12T09:15:00+01:00\",\n  \"performer\": [\n    {\n      \"reference\": \"Practitioner/dr-martin\"\n    }\n  ],\n  \"component\": [\n    {\n      \"code\": {\n        \"coding\": [\n          {\n            \"system\": \"http://loinc.org\",\n            \"code\": \"8480-6\",\n            \"display\": \"Pression artérielle systolique\"\n          }\n        ]\n      },\n      \"valueQuantity\": {\n        \"value\": 145,\n        \"unit\": \"mmHg\",\n        \"system\": \"http://unitsofmeasure.org\",\n        \"code\": \"mm[Hg]\"\n      }\n    },\n    {\n      \"code\": {\n        \"coding\": [\n          {\n            \"system\": \"http://loinc.org\",\n            \"code\": \"8462-4\",\n            \"display\": \"Pression artérielle diastolique\"\n          }\n        ]\n      },\n      \"valueQuantity\": {\n        \"value\": 92,\n        \"unit\": \"mmHg\",\n        \"system\": \"http://unitsofmeasure.org\",\n        \"code\": \"mm[Hg]\"\n      }\n    }\n  ]\n}",
+              "raw": "{\n  \"resourceType\": \"Observation\",\n  \"id\": \"obs-tension-dupont-01\",\n  \"status\": \"final\",\n  \"category\": [\n    {\n      \"coding\": [\n        {\n          \"system\": \"http://terminology.hl7.org/CodeSystem/observation-category\",\n          \"code\": \"vital-signs\",\n          \"display\": \"Vital signs\"\n        }\n      ]\n    }\n  ],\n  \"code\": {\n    \"coding\": [\n      {\n        \"system\": \"http://loinc.org\",\n        \"code\": \"85354-9\",\n        \"display\": \"Blood pressure panel with all children optional\"\n      }\n    ]\n  },\n  \"subject\": {\n    \"reference\": \"Patient/patient-jean-dupont\"\n  },\n  \"encounter\": {\n    \"reference\": \"Encounter/encounter-dupont-cardio-01\"\n  },\n  \"effectiveDateTime\": \"2026-03-12T09:15:00+01:00\",\n  \"performer\": [\n    {\n      \"reference\": \"Practitioner/dr-martin\"\n    }\n  ],\n  \"component\": [\n    {\n      \"code\": {\n        \"coding\": [\n          {\n            \"system\": \"http://loinc.org\",\n            \"code\": \"8480-6\",\n            \"display\": \"Systolic blood pressure\"\n          }\n        ]\n      },\n      \"valueQuantity\": {\n        \"value\": 145,\n        \"unit\": \"mmHg\",\n        \"system\": \"http://unitsofmeasure.org\",\n        \"code\": \"mm[Hg]\"\n      }\n    },\n    {\n      \"code\": {\n        \"coding\": [\n          {\n            \"system\": \"http://loinc.org\",\n            \"code\": \"8462-4\",\n            \"display\": \"Diastolic blood pressure\"\n          }\n        ]\n      },\n      \"valueQuantity\": {\n        \"value\": 92,\n        \"unit\": \"mmHg\",\n        \"system\": \"http://unitsofmeasure.org\",\n        \"code\": \"mm[Hg]\"\n      }\n    }\n  ]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -663,58 +655,6 @@
             }
           },
           "response": []
-        },
-        {
-          "name": "Structure_Definition Copy",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/fhir+json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/StructureDefinition/SteMariePatientINS",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "StructureDefinition",
-                "SteMariePatientINS"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Codesystem",
-          "request": {
-            "method": "GET",
-            "header": []
-          },
-          "response": []
-        },
-        {
-          "name": "New Request",
-          "request": {
-            "method": "GET",
-            "header": []
-          },
-          "response": []
         }
       ]
     },
@@ -722,7 +662,7 @@
       "name": "Codesystem",
       "item": [
         {
-          "name": "validate-code",
+          "name": "validate-code INS-NIR-TEST",
           "request": {
             "method": "GET",
             "header": [],
@@ -746,6 +686,14 @@
                 }
               ]
             }
+          },
+          "response": []
+        },
+        {
+          "name": "url",
+          "request": {
+            "method": "GET",
+            "header": []
           },
           "response": []
         }
