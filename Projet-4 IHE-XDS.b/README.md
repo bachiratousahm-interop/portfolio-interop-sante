@@ -1,209 +1,344 @@
-# Projet 4 — Partage documentaire via IHE XDS.b et DMP
+# Projet 4 — Partage documentaire IHE XDS.b / CI-SIS PDSm
 
-> **Portfolio Interopérabilité SI Santé** · Clinique Sainte-Marie (fictif) · 2026
+## Clinique Sainte-Marie — Architecture de partage documentaire vers le DMP
 
-[![IHE XDS.b](https://img.shields.io/badge/IHE-XDS.b-blue)]()
-[![CI-SIS](https://img.shields.io/badge/CI--SIS-ANS-green)]()
-[![DRIM-M](https://img.shields.io/badge/DRIM--M-ANS-orange)]()
-[![Statut](https://img.shields.io/badge/Statut-Terminé-brightgreen)]()
+Ce projet présente la conception d'une architecture de **partage de documents de santé** pour la Clinique Sainte-Marie, établissement fictif utilisé comme fil conducteur de mon portfolio en interopérabilité SI Santé.
+
+L'objectif est de modéliser un circuit documentaire conforme aux principes **IHE XDS.b** et au cadre français **CI-SIS**, avec :
+
+- publication de comptes rendus médicaux vers le **DMP** ;
+- gestion des métadonnées documentaires XDS ;
+- recherche et récupération des documents ;
+- prise en compte du cas particulier de l'imagerie avec **DRIMbox / DRIM-M et DICOM KOS** ;
+- ouverture vers une trajectoire **FHIR R4 / IHE MHD / CI-SIS PDSm**.
+
+> **Projet portfolio fictif :** aucune connexion réelle au DMP, aucune DRIMbox de production et aucune infrastructure XDS certifiée ne sont déployées.
 
 ---
 
 ## 1. Contexte
 
-**Type d'organisation**
-Clinique privée de 180 lits, spécialisée en cardiologie, Montpellier. L'établissement dispose d'une cartographie HL7 v2 (Projet 1), d'un profil FHIR Patient conforme INS (Projet 2) et d'un serveur FHIR R4 opérationnel (Projet 3). L'étape suivante est le partage externe — rendre les documents médicaux produits accessibles au médecin libéral, au patient via Mon Espace Santé, et à tout professionnel de santé autorisé, via le DMP national.
+La Clinique Sainte-Marie dispose de plusieurs systèmes producteurs de documents :
 
-**Problème rencontré**
-La clinique produit chaque jour des dizaines de documents médicaux — comptes-rendus de consultation, résultats de biologie, CR d'imagerie, lettres de sortie. Ces documents restent cloisonnés dans les systèmes locaux (Orbis, Sectra, Sysmex). Quand Jean DUPONT consulte son cardiologue libéral après une hospitalisation, ce médecin n'a accès à aucun document produit pendant le séjour — sauf si le patient les apporte physiquement. Cette rupture de continuité est un risque clinique direct et une non-conformité aux obligations de partage documentaire du Ségur du Numérique en Santé.
+| Système | Rôle |
+|---|---|
+| **DPI Orbis** | Comptes rendus de consultation et lettres de sortie |
+| **RIS Sectra** | Comptes rendus d'imagerie |
+| **PACS Sectra** | Stockage des objets DICOM |
+| **LIS Sysmex** | Résultats et comptes rendus biologiques |
+| **PFI documentaire** | Contrôles, métadonnées, routage, journalisation et rejeu |
+| **DRIMbox Source** | Génération et publication du DICOM KOS |
+| **DMP** | Cible nationale de partage documentaire |
 
-**Enjeu métier**
-Le partage documentaire via le DMP n'est pas une option — c'est une obligation réglementaire (Ségur du Numérique, loi Ma Santé 2022). Pour la clinique, c'est aussi un enjeu de qualité des soins : un cardiologue libéral qui accède au CR d'hospitalisation avant la consultation de suivi prend de meilleures décisions cliniques. Pour les équipes SI, c'est la démonstration que les standards HL7, FHIR et IHE convergent vers un objectif commun.
-
-**Contraintes principales**
-- Conformité obligatoire au profil IHE XDS.b et au CI-SIS (ANS)
-- INS-NIR obligatoire comme identifiant patient pivot — l'IPP local ne suffit pas pour le DMP
-- Métadonnées XDSDocumentEntry conformes aux JDV ANS publiés sur le SMT
-- Authentification via VIHF (certificat CPS) pour tout accès DMP
-- Spécificité imagerie : la DRIMbox impose un formatCode distinct (`urn:ihe:rad:TEXT`) et un repositoryUniqueId propre dans le cadre DRIM-M
+L'enjeu est de sortir d'une logique de simple transmission de fichiers pour mettre en place un **partage documentaire structuré, traçable et interopérable**.
 
 ---
 
-## 2. Objectif
+## 2. Architecture XDS.b
 
-**Ce que le projet devait résoudre**
-Documenter et simuler l'architecture complète de partage documentaire XDS.b pour la Clinique Sainte-Marie — en détaillant deux cas d'usage représentatifs (flux nominal et flux imagerie DRIMbox/DRIM-M) — en conformité avec le CI-SIS et les JDV ANS.
+L'architecture repose sur les principaux acteurs IHE XDS.b :
 
-**La valeur attendue**
-- Continuité documentaire garantie : tout document validé par un professionnel est publié au DMP et accessible aux professionnels autorisés
-- Conformité Ségur : l'établissement respecte les obligations de partage documentaire
-- Traçabilité complète : chaque publication porte l'identité de l'auteur (RPPS), le statut et l'INS-NIR
-- Base pour l'évolution MHD : l'infrastructure XDS.b documentée est le socle sur lequel viendra se greffer la passerelle MHD dans une trajectoire Ségur vague 2
+- **Document Source**
+- **Document Repository**
+- **Document Registry**
+- **Document Consumer**
+
+### Transactions utilisées
+
+| Fonction | Transaction IHE |
+|---|---|
+| Publication d'un document | **ITI-41 — Provide and Register Document Set-b** |
+| Enregistrement des métadonnées | **ITI-42 — Register Document Set-b** |
+| Recherche de documents | **ITI-18 — Registry Stored Query** |
+| Récupération d'un document | **ITI-43 — Retrieve Document Set** |
+
+### Architecture cible
+
+![Architecture XDS.b](diagrams/01-architecture-xdsb.png)
+
+La PFI documentaire contrôle et prépare les documents avant leur publication.  
+Le **Repository** conserve les documents tandis que le **Registry** indexe leurs métadonnées.
+
+Un consommateur recherche d'abord les documents dans le Registry via **ITI-18**, puis récupère leur contenu auprès du Repository via **ITI-43**.
 
 ---
 
-## 3. Mon rôle
+## 3. Cas d'usage principal — Publication d'un compte rendu
 
-| Activité | Détail |
-|----------|--------|
-| **Cadrage** | Identification des systèmes sources, définition des 5 flux (F1→F5), périmètre des 2 cas détaillés |
-| **Choix d'architecture** | Positionnement des acteurs XDS.b, rôle de la DRIMbox Source/Consommatrice dans le cadre DRIM-M |
-| **Standardisation** | Mapping des métadonnées XDSDocumentEntry sur les JDV ANS (JDV_J02, JDV_J07, JDV_J57, JDV_J58, JDV_J60) |
-| **Documentation** | DAT v2.0 (8 sections), diagrammes de séquence Draw.io, 2 XDSDocumentEntry JSON détaillés + SubmissionSet |
-| **Analyse critique** | Évaluation des limites et avantages de XDS.b, articulation avec FHIR/MHD, justification MOS du choix DocumentEntry |
+Le scénario nominal étudié concerne un **compte rendu de consultation cardiologique** validé dans le DPI Orbis.
 
----
+### Flux
 
-## 4. Architecture et standards
-
-### Les 4 acteurs IHE XDS.b à Sainte-Marie
-
-| Acteur XDS.b | Système | Rôle |
-|-------------|---------|------|
-| Document Source | DPI Orbis | Publie CR consultation et lettre de sortie |
-| Document Source | PACS/RIS Sectra + DRIMbox Source | Publie CR imagerie et KOS via DRIM-M |
-| Document Source | LIS Sysmex | Publie résultats biologie |
-| Document Repository | DMP (Cnam) + DRIMbox | Stocke le contenu des documents |
-| Document Registry | DMP (Cnam) | Indexe les métadonnées |
-| Document Consumer | DPI Orbis / médecin libéral | Recherche et récupère les documents |
-
-### Parcours Jean DUPONT — vue des flux
-
-```
-J0 — Admission cardiologie
-  F1 · ITI-41 · Orbis ──────────────► DMP · CR consultation (LOINC 11488-4) ← CAS DÉTAILLÉ
-  F2 · ITI-41 · Sectra/DRIMbox ──────► DMP · CR échographie (LOINC 18748-4) ← CAS DÉTAILLÉ
-  F3 · ITI-41 · Sysmex ──────────────► DMP · Résultats biologie (LOINC 11502-2) ← pattern F1
-
-J+2 — Sortie
-  F4 · ITI-41 · Orbis ──────────────► DMP · Lettre de sortie (LOINC 34105-7) ← pattern F1
-
-Post-sortie — Consultation médecin libéral
-  F5a · ITI-18 · Consumer ──────────► DMP Registry · FindDocuments
-  F5b · ITI-43 · Consumer ──────────► DMP Repository · RetrieveDocumentSet
+```text
+Cardiologue
+    ↓
+DPI Orbis
+    ↓
+PFI documentaire
+    ↓ contrôles + métadonnées XDS
+ITI-41
+    ↓
+DMP
 ```
 
-### Spécificité DRIM-M — flux imagerie (F2)
+La PFI assure notamment :
 
-Dans le cadre DRIM-M (Dispositif de Référencement des Imageries Médicales), la DRIMbox joue un rôle d'intermédiation — pas de simple connecteur DMP. L'ANS distingue deux composants :
+- contrôle de l'identité patient ;
+- contrôle des métadonnées obligatoires ;
+- validation des terminologies ;
+- construction du `DocumentEntry` ;
+- construction du `SubmissionSet` ;
+- publication ;
+- traitement de l'acquittement ;
+- journalisation ;
+- retry ou rejeu selon la nature de l'erreur.
 
-- **DRIMbox Source** : publie les KOS (Key Object Selection — références aux images DICOM) et le CR textuel vers le DMP Registry. Elle ne stocke pas les images — elles restent dans le PACS Sectra.
-- **DRIMbox Consommatrice** : portail d'accès sécurisé au PACS depuis l'extérieur. Le médecin libéral récupère le KOS depuis le DMP, puis contacte la DRIMbox Consommatrice pour streamer les images DICOM depuis le PACS via le réseau DRIM-M.
-
-### Standards appliqués
-
-| Standard | Usage |
-|----------|-------|
-| IHE XDS.b | Profil de partage documentaire — transactions ITI-41/42/18/43 |
-| CI-SIS ANS | Cadre d'interopérabilité français — JDV, codes, exigences DMP |
-| DRIM-M ANS | Cadre imagerie médicale — DRIMbox Source/Consommatrice, KOS |
-| IHE MHD | Profil cible — équivalent FHIR/REST de XDS.b |
-| SOAP / ebXML | Protocole de transport des transactions XDS.b |
-| VIHF | Authentification des systèmes sources vers le DMP |
-
-### Sécurité
-
-- Authentification des systèmes sources via **VIHF** (certificat CPS ou logiciel)
-- Chiffrement **TLS 1.2+** sur toutes les connexions SOAP/HTTPS
-- Traçabilité obligatoire des accès DMP — conformité HDS et RGPD
-- Gestion des habilitations DMP par profil professionnel
-- Stratégie de rejeu Mirth Connect en cas d'indisponibilité DMP
+![Publication CR vers le DMP](diagrams/02-publication-cr-dmp.png)
 
 ---
 
-## 5. Décisions clés
+## 4. Métadonnées documentaires
 
-### Pourquoi XDS.b et pas MHD directement ?
-XDS.b est le protocole natif du DMP français — il est opérationnel, certifié, et les connecteurs éditeurs (Orbis, Sectra, Sysmex) l'implémentent en production. Choisir MHD aujourd'hui imposerait d'ajouter une passerelle MHD/XDS entre le serveur FHIR et le DMP — une complexité supplémentaire sans bénéfice immédiat pour un établissement qui dispose déjà de connecteurs XDS.b certifiés. XDS.b est le choix pragmatique pour l'existant ; MHD est la trajectoire cible pour les nouvelles intégrations (voir DAT section 6.3).
+Le projet distingue notamment les métadonnées portées par le **DocumentEntry** et celles du **SubmissionSet**.
 
-### Pourquoi documenter uniquement le DocumentEntry et pas toutes les classes MOS ?
-Le modèle MOS ANS définit 6 classes dans la partie PartageDocument (LotSoumission, Fiche, Document, Professionnel, PersonnePriseCharge, Dispositif). Le DocumentEntry (Fiche) est documenté en détail car c'est l'objet central du Registry — c'est lui que le Consumer interroge via ITI-18 et qui porte toute la sémantique métier. Le SubmissionSet (LotSoumission) est construit automatiquement par le connecteur éditeur. Les classes Professionnel/PatientPriseCharge/Dispositif sont des sous-composants intégrés dans le DocumentEntry en XDS — pas des objets séparés.
+Exemples de données contrôlées :
 
-### Pourquoi l'INS-NIR et pas l'IPP comme patientId ?
-L'IPP est l'identifiant local de la clinique — il ne signifie rien pour le DMP Registry national. Sans INS-NIR qualifiée comme `patientId`, la publication est rejetée ou crée un dossier orphelin. C'est la raison d'être du Projet 2 : le profil `SteMariePatientINS` garantit que l'INS-NIR est disponible sur chaque ressource Patient avant toute publication XDS.
+```text
+DocumentEntry
+├── patientId
+├── sourcePatientId
+├── classCode
+├── typeCode
+├── practiceSettingCode
+├── confidentialityCode
+├── languageCode
+├── mimeType
+├── formatCode
+├── authorPerson
+├── creationTime
+└── uniqueId
 
-### Pourquoi un formatCode différent pour l'imagerie (F2) ?
-Le CR d'échographie transite par la DRIMbox Source — elle impose le formatCode `urn:ihe:rad:TEXT` (IHE Radiology), distinct du `urn:ihe:iti:xds-sd:pdf:2008` standard. Ce n'est pas un choix local — c'est une contrainte du cadre DRIM-M documentée dans le CI-SIS imagerie. De même, le `repositoryUniqueId` du flux F2 pointe vers la DRIMbox et non vers le DMP Repository standard.
-
-### Limite acceptée — dépendance au DMP
-Les flux F1 à F4 sont bloqués si le DMP Registry (Cnam) est indisponible. Ce risque est accepté et mitigé par une file d'attente dans l'ESB Mirth Connect — les messages sont conservés et republié à la reconnexion. Les erreurs fonctionnelles (INS absente, code JDV invalide) nécessitent une correction métier avant rejeu.
-
----
-
-## 6. Résultats
-
-### Ce qui a été livré
-- **DAT v2.0** (8 sections) : contexte + hypothèses portfolio, acteurs, architecture fonctionnelle, métadonnées détaillées (justification MOS, 2 cas, SubmissionSet, ENF, gestion erreurs), analyse critique, articulation FHIR/MHD
-- **Diagrammes de séquence Draw.io** : vue globale + zoom ITI-41 flux nominal + zoom ITI-41 flux DRIMbox + zoom ITI-18/43
-- **2 fichiers JSON XDSDocumentEntry** détaillés (CR consultation + CR imagerie) avec SubmissionSet associé
-- **Synthèse F3/F4** en tableau — pattern identique à F1, seuls typeCode et auteur changent
-
-### Ce que le projet a amélioré
-- **Continuité documentaire** : le parcours Jean DUPONT J0→sortie est entièrement couvert — 2 cas détaillés, 2 synthétisés, 1 flux de consultation
-- **Conformité réglementaire** : métadonnées tracées vers les JDV ANS officiels — auditables et maintenables
-- **Vision d'évolution** : la section articulation FHIR/MHD montre le chemin vers une architecture Ségur vague 2 via passerelle MHD/PFI sans tout reconstruire
-
-### Ce que ça prouve sur mon niveau
-- Maîtrise des profils IHE XDS.b et de leur implémentation française (CI-SIS, JDV, DRIM-M)
-- Capacité à nuancer la réalité technique (rôle précis DRIMbox, distinction Source/Consommatrice, KOS)
-- Compréhension des enjeux de gouvernance des métadonnées (JDV ANS, SMT, Gazelle)
-- Posture d'architecte : savoir où XDS.b montre ses limites et comment MHD prend le relais
-
----
-
-## 7. Ce que ce projet démontre
-
-- **Maîtrise IHE** : XDS.b, DRIM-M, transactions ITI-41/42/18/43, acteurs, métadonnées — pas juste la théorie mais les choix concrets pour Sainte-Marie
-- **Ancrage réglementaire français** : CI-SIS, JDV ANS, DMP, DRIMbox, VIHF, Ségur — le vocabulaire et les outils du terrain
-- **Analyse critique** : identification des limites (dépendance DMP, protocole vieillissant, biologie CDA R2 N3 en cible) ET proposition d'une trajectoire d'évolution (MHD/PFI)
-- **Cohérence d'architecture** : ce projet est le point de convergence des 3 projets précédents — l'INS-NIR du Projet 2, les flux HL7 du Projet 1 et le serveur FHIR du Projet 3 s'articulent tous ici
-
----
-
-## 8. Structure du dépôt
-
-```
-Projet-4-ihe-xds/
-├── README.md                                      ← ce fichier
-├── dat/
-│   └── DAT_Projet4_IHE_XDS_Sainte-Marie_v2.0.docx
-├── diagrammes/
-│   └── XDS_Sequences_Sainte-Marie_v2.0.drawio
-└── instances/
-    ├── metadata_CR_consultation.json              ← DocumentEntry + SubmissionSet (F1)
-    └── metadata_CR_imagerie_DRIMbox.json          ← DocumentEntry + SubmissionSet (F2)
+SubmissionSet
+├── patientId
+├── sourceId
+├── submissionTime
+├── contentTypeCode
+├── author
+└── uniqueId
 ```
 
----
-
-## Liens avec les autres projets
-
-| Projet | Lien |
-|--------|------|
-| **Projet 1** — HL7 v2 | L'admission ADT^A01 (F01) est le déclencheur métier de la publication XDS ITI-41 (F1) |
-| **Projet 2** — Profil FHIR | L'INS-NIR du profil `SteMariePatientINS` est le `patientId` de toutes les XDSDocumentEntry |
-| **Projet 3** — Serveur FHIR | Le serveur Hapi est la future brique MHD Source — `DocumentReference` FHIR vers DMP via passerelle/PFI |
-| **Projet 5** — Architecture SI | XDS.b est la couche de partage documentaire de l'architecture globale — résilience Mirth, gouvernance, sécurité |
+Une règle essentielle est la **cohérence de l'identité patient entre le DocumentEntry et le SubmissionSet**.
 
 ---
 
-## Ressources
+## 5. Règles de gestion
 
-| Ressource | URL |
-|-----------|-----|
-| CI-SIS ANS | https://esante.gouv.fr/offres-services/ci-sis/espace-publication |
-| SMT — Terminologies ANS | https://mos.esante.gouv.fr |
-| MOS ANS — PartageDocument | https://mos.esante.gouv.fr/19.html |
-| ANS DRIM-M | https://esante.gouv.fr/offres-services/programmes-services/drim-m |
-| Gazelle ANS | https://gazelle.esante.gouv.fr |
-| IHE ITI XDS.b | https://www.ihe.net/resources/technical_frameworks/#IT |
-| IHE MHD | https://www.ihe.net/resources/technical_frameworks/#IT |
-| JDV_J02 healthcareFacilityCode | https://interop.esante.gouv.fr/ig/nos/1.4.0/ValueSet-JDV-J02 |
+Quelques règles mises en œuvre dans la spécification :
 
----
-
-> **Note portfolio** : Ce projet est fictif, réalisé à des fins de portfolio. Les identifiants, patients, OID et endpoints sont simulés. L'objectif est de démontrer la compréhension des profils IHE XDS.b, du cadre DRIM-M et de leur articulation avec FHIR/MHD.
+| ID | Règle |
+|---|---|
+| `RG-XDS-01` | Le document doit avoir un statut métier autorisant son partage |
+| `RG-XDS-02` | L'identité patient doit être exploitable avant émission |
+| `RG-XDS-03` | Les patientId du DocumentEntry et du SubmissionSet doivent être cohérents |
+| `RG-XDS-04` | Les métadonnées obligatoires doivent être présentes |
+| `RG-XDS-05` | Les codes doivent appartenir aux terminologies applicables |
+| `RG-XDS-06` | Un uniqueId ne doit pas identifier plusieurs documents différents |
+| `RG-XDS-07` | Une erreur fonctionnelle ne déclenche pas de retry automatique illimité |
+| `RG-XDS-08` | Chaque publication doit produire une trace exploitable |
 
 ---
 
-*Portfolio Interopérabilité SI Santé — Reconversion professionnelle consultante/architecte — 2026*
+## 6. Gestion des erreurs et résilience
+
+Les erreurs sont séparées en deux catégories.
+
+### Erreur fonctionnelle
+
+Exemples :
+
+- identité patient insuffisante ;
+- métadonnée obligatoire absente ;
+- code invalide ;
+- incohérence patient ;
+- identifiant documentaire déjà utilisé.
+
+Traitement :
+
+```text
+Rejet
+→ file d'erreur
+→ correction
+→ rejeu contrôlé
+```
+
+### Erreur technique
+
+Exemples :
+
+- timeout ;
+- indisponibilité de la cible ;
+- erreur réseau ;
+- erreur TLS.
+
+Traitement :
+
+```text
+Retry borné
+→ journalisation
+→ alerte
+→ file d'erreur si échec persistant
+```
+
+Chaque échange peut être suivi grâce à un **correlationId**.
+
+---
+
+## 7. Cas imagerie — DRIMbox / DRIM-M
+
+L'imagerie nécessite de distinguer deux objets différents :
+
+1. le **compte rendu textuel**, produit par le RIS ;
+2. le **DICOM KOS**, généré par la DRIMbox Source.
+
+Les images elles-mêmes restent stockées dans le **PACS source**.
+
+### Workflow simplifié
+
+```text
+Radiologue
+    ↓ validation du CR
+RIS Sectra
+    ├──────────────→ PFI → ITI-41 → DMP
+    │
+    └→ DRIMbox Source
+            ↓
+        C-FIND
+            ↓
+        PACS Sectra
+            ↓
+     références DICOM
+            ↓
+       génération KOS
+            ↓
+        RAD-68
+            ↓
+           DMP
+```
+
+Le **KOS ne contient pas les images** : il référence les objets DICOM de l'examen.
+
+Dans le scénario :
+
+```text
+mimeType   = application/dicom
+formatCode = 1.2.840.10008.5.1.4.1.1.88.59
+```
+
+![Scénario DRIMbox / KOS](diagrams/03-drimbox-kos.png)
+
+---
+
+## 8. Trajectoire PDSm / FHIR R4
+
+Le projet reste principalement basé sur **XDS.b**.
+
+La partie PDSm présente une **trajectoire d'évolution**, et non une implémentation réellement déployée.
+
+Le CI-SIS PDSm s'appuie sur **IHE MHD et FHIR R4** pour proposer une approche REST du partage documentaire.
+
+### Correspondance des modèles
+
+| Concept documentaire | XDS | PDSm / FHIR R4 |
+|---|---|---|
+| DocumentEntry | DocumentEntry ebXML | `DocumentReference` |
+| SubmissionSet | SubmissionSet ebXML | `List` profilée SubmissionSet |
+| Folder | Folder ebXML | `List` profilée Folder |
+| Contenu documentaire | Document binaire / MTOM | `Binary` |
+
+### Correspondance fonctionnelle des transactions
+
+| Fonction | XDS.b | MHD / PDSm |
+|---|---|---|
+| Publication | ITI-41 | ITI-65 — Provide Document Bundle |
+| Recherche | ITI-18 | ITI-67 — Find Document References |
+| Récupération | ITI-43 | ITI-68 — Retrieve Document |
+
+Cette trajectoire pourrait permettre à terme d'exposer les fonctions documentaires à des **applications consommant des API FHIR/REST**, tout en maintenant les flux XDS nécessaires vers les infrastructures documentaires existantes.
+
+---
+
+## 9. Plan de tests
+
+Le DAT définit plusieurs cas de recette :
+
+| Test | Scénario | Résultat attendu |
+|---|---|---|
+| `TC-XDS-001` | CR valide | Publication acceptée |
+| `TC-XDS-002` | patientId absent | Rejet fonctionnel |
+| `TC-XDS-003` | typeCode invalide | Rejet et journalisation |
+| `TC-XDS-004` | uniqueId déjà utilisé | Gestion du doublon |
+| `TC-XDS-005` | Cible indisponible | Retry puis alerte |
+| `TC-XDS-006` | Timeout réseau | Retry puis file d'erreur |
+| `TC-XDS-007` | Patient incohérent document / lot | Rejet |
+| `TC-XDS-008` | Recherche et récupération | Document retrouvé |
+| `TC-DRIM-001` | Examen imagerie valide | KOS généré et publié |
+| `TC-DRIM-002` | PACS inaccessible | KOS non publié, erreur tracée |
+
+---
+
+## 10. Livrables
+
+```text
+Projet-4-XDS-PDSm/
+│
+├── README.md
+├── DAT_Projet4_XDS_PDSm_Sainte-Marie_v3.0.pdf
+│
+└── diagrams/
+    ├── 01-architecture-xdsb.png
+    ├── 02-publication-cr-dmp.png
+    └── 03-drimbox-kos.png
+```
+
+Le **DAT complet** contient les règles, métadonnées, scénarios, mécanismes de résilience et cas de tests détaillés.
+
+---
+
+## 11. Limites du POC
+
+Ce projet est une **étude d'architecture et de spécification**, et non une plateforme DMP réelle.
+
+Ne sont notamment pas implémentés :
+
+- connexion réelle au DMP ;
+- certificats et authentification de production ;
+- infrastructure XDS réelle ;
+- DRIMbox certifiée ;
+- tests d'interopérabilité Gazelle ;
+- implémentation réelle de PDSm/MHD ;
+- consultation réelle des images via DRIM-M.
+
+Les patients, professionnels, identifiants, OID et endpoints utilisés sont fictifs.
+
+---
+
+## 12. Références
+
+- **ANS — Volet Partage de Documents de Santé**
+- **ANS — CI-SIS PDSm**
+- **IHE — Cross-Enterprise Document Sharing (XDS.b)**
+- **IHE — Mobile access to Health Documents (MHD)**
+- **IHE — Comprehensive SubmissionSet**
+- **ANS — DRIM-M / Imagerie médicale**
+- **ANS — Spécifications DRIMbox**
+
+---
+
+## Compétences mobilisées
+
+`IHE XDS.b` · `CI-SIS` · `DMP` · `PDSm` · `IHE MHD` · `FHIR R4` · `DICOM KOS` · `DRIM-M` · `Architecture d'intégration` · `Mapping de métadonnées` · `Gestion des erreurs` · `Plan de tests`
+
+---
+
+**SAHM Bachiratou**  
+*Consultante Interopérabilité SI Santé · Architecture d'intégration*
