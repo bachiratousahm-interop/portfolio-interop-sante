@@ -1,0 +1,22 @@
+{
+  "resourceType": "Organization",
+  "id": "clinique-sainte-marie",
+  "name": "Clinique Sainte-Marie",
+  "alias": ["Sainte-Marie"],
+  "telecom": [
+    {
+      "system": "phone",
+      "value": "+33 4 67 00 00 00",
+      "use": "work"
+    }
+  ],
+  "address": [
+    {
+      "use": "work",
+      "line": ["1 Rue de la Santé"],
+      "city": "Montpellier",
+      "postalCode": "34000",
+      "country": "FR"
+    }
+  ]
+}

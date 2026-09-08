@@ -1,80 +1,72 @@
+# Projet 2 — Profil FHIR Patient INS
 
-# Projet 2 : Profil FHIR R4 Patient conforme ANS/CI-SIS
+## 🎯 Objectif
 
-## Objectif
+Ce projet met en œuvre un profil FHIR R4 `SteMariePatientINS` pour la Clinique Sainte-Marie, établissement fictif utilisé dans le cadre de mon portfolio d’interopérabilité SI Santé.
 
-Création d'un profil FHIR R4 Patient **SteMariePatientINS** pour la Clinique 
-Sainte-Marie, conforme au cadre réglementaire français (INS, CI-SIS, FR Core v2.1.0).
-
-## Standards et référentiels
-
-| Standard | Version | Rôle |
-|----------|---------|------|
-| HL7 FHIR R4 | 4.0.1 | Socle technique |
-| FR Core Interop'Santé | 2.1.0 | Profil parent FrPatientINS |
-| Référentiel INS-ANS | - | Obligation réglementaire |
-| CI-SIS - ANS | - | Cadre normatif général |
+Le profil est dérivé de **FRCorePatientINSProfile v2.1.0** et vise à représenter une identité patient compatible avec le cadre français de l’INS, tout en ajoutant des contraintes propres au contexte de la clinique.
 
 ---
 
-## Architecture du profil
+## 🏥 Contexte
 
-Patient FHIR R4 base
+La Clinique Sainte-Marie souhaite préparer son SI aux échanges de données de santé reposant sur FHIR et aux usages nécessitant une identité patient fiabilisée.
 
-└── FrPatient (Interop'Santé)
+Le profil reprend les contraintes nationales portées par FR Core Patient INS et ajoute uniquement les règles locales nécessaires au fonctionnement de l’établissement.
 
-└── FrPatientINS (Interop'Santé)
+Profil parent :
 
-└── SteMariePatientINS ← notre profil
-### Contraintes ajoutées
+`FRCorePatientINSProfile — hl7.fhir.fr.core#2.1.0`
 
-| Élément | Cardinalité | Justification |
-|---------|-------------|---------------|
-| identifier | 2..* | IPP + INS-NIR minimum |
-| identifier:IPP | 1..1 | Identifiant local obligatoire |
-| name.family | 1..1 | Trait INS |
-| name.given | 1..* | Trait INS |
-| birthDate | 1..1 | Trait INS |
-| gender | 1..1 | Trait INS |
-| managingOrganization | 1..1 | Contrainte établissement |
+Profil local :
+
+`SteMariePatientINS v1.0.1`
+
+Canonical :
+
+`https://fhir-sainte-marie.up.railway.app/fhir/StructureDefinition/SteMariePatientINS`
 
 ---
 
-## Fichiers
+## 🧩 Contraintes locales
 
-| Fichier | Description |
-|---------|-------------|
-| `SteMariePatientINS.fsh` | Source FSH du profil |
-| `StructureDefinition-SteMariePatientINS.json` | Artefact JSON généré via FSH Online |
-| `Patient-jean-dupont.json` | Instance de référence  patient fictif |
-| `DAT-SPEC-FHIR-Patient-SteMariePatientINS` | Dossier d'Architecture Technique et Spécification |
-| `captures/` | Differential Table + Snapshot Table (Simplifier) |
+Le profil `SteMariePatientINS` renforce principalement trois éléments :
 
----
+| Élément | FR Core 2.1.0 | Sainte-Marie | Objectif |
+|---|---:|---:|---|
+| `Patient.identifier` | `1..*` | `2..*` | Renforcer les exigences d'identification pour les échanges |
+| `Patient.identifier[PI]` | `0..*` | `1..1` | Imposer un IPP Sainte-Marie |
+| `Patient.managingOrganization` | `0..1` | `1..1` | Rattacher obligatoirement le patient à l'établissement |
 
-## Profil publié
+Les contraintes nationales relatives à l’INS, aux traits d’identité, au lieu de naissance et à la fiabilité de l’identité restent héritées de `FRCorePatientINSProfile`.
 
-🔗 [Voir sur Simplifier](https://simplifier.net/portfolio-sainte-marie)
-
-**URL canonique** : https://clinique-sainte-marie.fr/fhir/StructureDefinition/SteMariePatientINS
+Lorsque `identityStatus = VALI`, l’invariant FR Core `fr-core-1` contrôle notamment la présence d’un identifiant INS prévu par le profil.
 
 ---
 
-## Validation
+## 🧪 Instance de référence
 
-Validation réalisée sur [validator.fhir.org](https://validator.fhir.org) 
-avec le package `hl7.fhir.fr.core#2.1.0`.
+Une instance fictive `Patient-jean-dupont.json` a été créée pour tester le profil.
 
-| Niveau | Message | Analyse |
-|--------|---------|---------|
-| Warning | dom-6 narrative absent | Best practice , non bloquant |
-| Warning | Profile not found (domaine fictif) | Attendu , établissement fictif |
-| Information | fr-core-cs-v2-0445 is draft | CodeSystem ANS en draft , non bloquant |
+Elle contient notamment :
 
-**Aucune erreur bloquante.**
+- un IPP Sainte-Marie ;
+- un identifiant `INS-NIR-TEST` ;
+- les traits d’identité du patient ;
+- le lieu de naissance et son code INSEE ;
+- l’extension `identityReliability` ;
+- le statut d’identité `VALI` ;
+- une référence vers `Organization/clinique-sainte-marie`.
 
-## Outils utilisés
+L’utilisation de `INS-NIR-TEST` permet de tester les règles INS sans utiliser de donnée patient réelle.
 
-- [FSH Online](https://fshschool.org/FSHOnline) - compilation FSH → JSON
-- [Simplifier.net](https://simplifier.net) - publication et visualisation
-- [validator.fhir.org](https://validator.fhir.org) - validation de l'instance
+---
+
+## ⚙️ Génération du profil
+
+Le profil est écrit en **FHIR Shorthand (FSH)**.
+
+La `StructureDefinition` est générée localement avec **SUSHI v3.20.0** :
+
+```bash
+npx sushi build --snapshot
