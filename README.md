@@ -1,4 +1,4 @@
-# Portfolio - Interopérabilité SI Santé
+# Portfolio Interopérabilité SI Santé
 
 **HL7 v2 · FHIR R4 · FR Core · IHE XDS.b / MHD · Mirth Connect · HAPI FHIR · SMART on FHIR**
 
