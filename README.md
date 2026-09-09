@@ -17,7 +17,7 @@ Les différents projets s'appuient sur un même cas pédagogique : la **Clinique
 | [Projet 1](./projet-1-cartographie-hl7v2/) | **Cartographie HL7 v2** | Flux hospitaliers, MLLP, routage, règles d'interface |
 | [Projet 2](./projet-2-fhir-r4/) | **Profil FHIR R4 Patient / INS** | FR Core, FSH, SUSHI, StructureDefinition, validation |
 | [Projet 3](./projet-3-serveur-fhir-hapi/) | **Serveur HAPI FHIR R4** | API REST, ressources FHIR, validation, terminologies, Bundle |
-| [[Projet 4](./Projet-4%20IHE-XDS.b/) | **Partage documentaire XDS.b / MHD** | DMP, CI-SIS, PDSm, DRIMbox, DICOM KOS |
+| [Projet 4](./Projet-4%20IHE-XDS.b/) | **Partage documentaire XDS.b / MHD** | DMP, CI-SIS, PDSm, DRIMbox, DICOM KOS |
 | [Projet 5](./Projet-5%20Architecture%20d%27integration/) | **Architecture d'intégration globale** | HL7 v2 → FHIR, Mirth, SMART on FHIR, architecture cible |
 
 ### Artefacts Mirth Connect
