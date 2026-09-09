@@ -86,7 +86,7 @@ Le dossier contient :
 - le fichier FSH ;
 - la StructureDefinition JSON ;
 - l'instance Patient de test ;
-- les captures de génération et de validation.
+- les screenshot de génération et de validation.
 
 ---
 
