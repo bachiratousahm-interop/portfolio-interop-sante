@@ -64,7 +64,7 @@ Document       -> Binary
 
 Le dossier contient :
 
-- `DAT-XDS-pdsm-Sainte-Marie.pdf`
+- `DAT-XDS-PDSm-Sainte-Marie.pdf`
 - le dossier `Diagrams/` avec les trois schémas principaux du projet.
 
 Les diagrammes présentent :
