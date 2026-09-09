@@ -36,6 +36,6 @@ Flux de résultats de laboratoire : message HL7 v2 ORU^R01 → ressource FHIR `O
 
 Dans Mirth Connect Administrator : **Channels → Import Channel**, sélectionner le fichier `.xml` correspondant.
 
-## Documentation complète
+## Documentation complémentaire
 
-Voir le document `Mirth_Connect_Documentation_Reference.docx` pour le détail des scripts de transformation, le mapping HL7 → FHIR complet, et le journal des problèmes rencontrés et résolus.
+Le détail de l'architecture, du mapping HL7 v2 → FHIR et des expérimentations Mirth Connect est présenté dans le **Projet 5 - Architecture d'intégration SI Santé**.
