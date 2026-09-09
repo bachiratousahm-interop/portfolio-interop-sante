@@ -1,5 +1,5 @@
 
-# Projet 1 — Cartographie des flux HL7 v2
+# Projet 1: Cartographie des flux HL7 v2
 
 ## Contexte
 
@@ -16,8 +16,6 @@ L’objectif du projet est de cartographier et spécifier les principaux échang
 - Préparer les cas de recette des interfaces.
 
 ## Architecture
-
-![Architecture existante du SIH](./diagrams/architecture-si-existant.svg)
 
 L’architecture repose sur un modèle hub-and-spoke dans lequel Mirth Connect assure la réception, le contrôle, la transformation et le routage des messages HL7 v2.
 
@@ -57,9 +55,9 @@ Les contrôles portent notamment sur :
 Le projet couvre des cas nominaux et d’erreur : admission CARDIO, absence de PV1-19, résultat non corrélé, code métier inconnu, ACK en erreur et détection de doublons.
 
 ## Livrables
-
-- [DAT — Cartographie HL7 v2](./docs/DAT_Sainte_Marie_Interoperabilite.pdf)
-- [Version Word](./docs/DAT_Sainte_Marie_Interoperabilite.docx)
+Le dossier contient :
+- le DAT au format PDF 
+- les diagrammes d’architecture et de flux HL7 v2.
 
 ## Technologies et standards
 
