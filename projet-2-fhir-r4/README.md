@@ -1,72 +1,93 @@
-# Projet 2 — Profil FHIR Patient INS
+# Projet 2 - Profil FHIR R4 Patient INS
 
-## 🎯 Objectif
+## Objectif
 
-Ce projet met en œuvre un profil FHIR R4 `SteMariePatientINS` pour la Clinique Sainte-Marie, établissement fictif utilisé dans le cadre de mon portfolio d’interopérabilité SI Santé.
+Ce projet met en œuvre un profil FHIR R4 `SteMariePatientINS` pour la Clinique Sainte-Marie, établissement fictif utilisé comme fil conducteur du portfolio.
 
-Le profil est dérivé de **FRCorePatientINSProfile v2.1.0** et vise à représenter une identité patient compatible avec le cadre français de l’INS, tout en ajoutant des contraintes propres au contexte de la clinique.
+Le profil dérive de **FR Core Patient INS 2.1.0** et ajoute des contraintes locales permettant d'expérimenter la représentation d'une identité patient dans un contexte français.
+
+> Cas pédagogique - aucune donnée patient réelle n'est utilisée.
 
 ---
 
-## 🏥 Contexte
-
-La Clinique Sainte-Marie souhaite préparer son SI aux échanges de données de santé reposant sur FHIR et aux usages nécessitant une identité patient fiabilisée.
-
-Le profil reprend les contraintes nationales portées par FR Core Patient INS et ajoute uniquement les règles locales nécessaires au fonctionnement de l’établissement.
+## Profil réalisé
 
 Profil parent :
 
-`FRCorePatientINSProfile — hl7.fhir.fr.core#2.1.0`
+`FRCorePatientINSProfile - hl7.fhir.fr.core#2.1.0`
 
 Profil local :
 
 `SteMariePatientINS v1.0.1`
 
-Canonical :
+Le profil ajoute notamment :
 
-`https://fhir-sainte-marie.up.railway.app/fhir/StructureDefinition/SteMariePatientINS`
+| Élément | Contrainte locale |
+|---|---|
+| `Patient.identifier` | `2..*` |
+| `Patient.identifier[PI]` | `1..1` |
+| `Patient.managingOrganization` | `1..1` |
 
----
-
-## 🧩 Contraintes locales
-
-Le profil `SteMariePatientINS` renforce principalement trois éléments :
-
-| Élément | FR Core 2.1.0 | Sainte-Marie | Objectif |
-|---|---:|---:|---|
-| `Patient.identifier` | `1..*` | `2..*` | Renforcer les exigences d'identification pour les échanges |
-| `Patient.identifier[PI]` | `0..*` | `1..1` | Imposer un IPP Sainte-Marie |
-| `Patient.managingOrganization` | `0..1` | `1..1` | Rattacher obligatoirement le patient à l'établissement |
-
-Les contraintes nationales relatives à l’INS, aux traits d’identité, au lieu de naissance et à la fiabilité de l’identité restent héritées de `FRCorePatientINSProfile`.
-
-Lorsque `identityStatus = VALI`, l’invariant FR Core `fr-core-1` contrôle notamment la présence d’un identifiant INS prévu par le profil.
+L'objectif est notamment d'associer une identité INS de test à un IPP local Sainte-Marie.
 
 ---
 
-## 🧪 Instance de référence
+## Implémentation
 
-Une instance fictive `Patient-jean-dupont.json` a été créée pour tester le profil.
-
-Elle contient notamment :
-
-- un IPP Sainte-Marie ;
-- un identifiant `INS-NIR-TEST` ;
-- les traits d’identité du patient ;
-- le lieu de naissance et son code INSEE ;
-- l’extension `identityReliability` ;
-- le statut d’identité `VALI` ;
-- une référence vers `Organization/clinique-sainte-marie`.
-
-L’utilisation de `INS-NIR-TEST` permet de tester les règles INS sans utiliser de donnée patient réelle.
-
----
-
-## ⚙️ Génération du profil
-
-Le profil est écrit en **FHIR Shorthand (FSH)**.
-
-La `StructureDefinition` est générée localement avec **SUSHI v3.20.0** :
+Le profil est écrit en **FHIR Shorthand (FSH)** puis généré avec **SUSHI**.
 
 ```bash
 npx sushi build --snapshot
+```
+
+Les principaux artefacts du projet sont :
+
+- `SteMariePatientINS.fsh` - définition FSH du profil ;
+- `StructureDefinition-SteMariePatientINS.json` - StructureDefinition générée ;
+- `Patient-jean-dupont.json` - instance Patient fictive de test ;
+- `SPEC-FHIR-Patient-SteMariePatientINS.pdf` - spécification du profil ;
+- `Screenshot/` - captures des étapes de génération et de validation.
+
+---
+
+## Instance de test
+
+L'instance fictive `Patient-jean-dupont.json` contient notamment :
+
+- un IPP Sainte-Marie ;
+- un identifiant `INS-NIR-TEST` ;
+- les traits d'identité ;
+- le lieu de naissance ;
+- le statut d'identité ;
+- une référence vers l'organisation Sainte-Marie.
+
+`INS-NIR-TEST` est utilisé uniquement à des fins de démonstration.
+
+---
+
+## Validation
+
+Le profil et l'instance ont été utilisés pour expérimenter :
+
+- la génération d'une `StructureDefinition` avec SUSHI ;
+- la validation d'une ressource Patient ;
+- les contraintes héritées de FR Core ;
+- les contraintes locales du profil Sainte-Marie.
+
+Les tests serveur et les opérations FHIR associées sont poursuivis dans le **Projet 3 - Serveur HAPI FHIR**.
+
+---
+
+## Livrables
+
+Le dossier contient :
+
+- la spécification PDF ;
+- le fichier FSH ;
+- la StructureDefinition JSON ;
+- l'instance Patient de test ;
+- les screenshot de génération et de validation.
+
+---
+
+**Technologies :** FHIR R4 · FR Core · FSH · SUSHI · INS
