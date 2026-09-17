@@ -69,7 +69,7 @@ Le dossier contient :
 - Sysmex
 - Sectra
 - Génois
-- Hemera
+
 
 ## Limites du périmètre
 
